@@ -289,18 +289,47 @@
             -webkit-user-select: text !important;
             user-select: text !important;
         }
+        /* КНОПКА СКРЫТИЯ ЧУЖИХ РИСУНКОВ */
+        .toggle-view-btn {
+            font-size: 1.2rem;
+            cursor: pointer;
+            user-select: none;
+            transition: transform 0.2s, opacity 0.2s;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        .toggle-view-btn:hover {
+            transform: scale(1.15);
+        }
+        .toggle-view-btn.muted {
+            opacity: 0.4;
+            filter: grayscale(100%);
+            transform: scale(0.9);
+        }
 
     </style>
 </head>
 <body>
     <canvas id="drawingCanvas"></canvas>
-        <!-- Палитра для выбора цвета акварели -->
-    <div class="color-palette">
+        <!-- Улучшенная палитра Bellunium с кнопкой скрытия чужих рисунков -->
+    <div class="color-palette" style="display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 12px 10px;">
+        <!-- Кнопка-глаз для переключения режима видимости -->
+        <div id="toggle-overlay-btn" class="toggle-view-btn" onclick="toggleForeignDrawings()" title="Скрыть/Показать чужие рисунки">👁️</div>
+
+        <!-- Линия-разделитель -->
+        <div style="width: 100%; height: 1px; background: rgba(13, 148, 136, 0.15);"></div>
+
+        <!-- Сами цвета кисти -->
         <div class="color-btn active" style="background: #0d9488;" onclick="changeMyColor('#0d9488', this)"></div>
         <div class="color-btn" style="background: #2dd4bf;" onclick="changeMyColor('#2dd4bf', this)"></div>
         <div class="color-btn" style="background: #f59e0b;" onclick="changeMyColor('#f59e0b', this)"></div>
         <div class="color-btn" style="background: #ec4899;" onclick="changeMyColor('#ec4899', this)"></div>
     </div>
+
 
     <section class="intro-section">
         <div class="intro-text">
@@ -429,6 +458,8 @@
         window.addEventListener('scroll', loadLinesFromServer); // Перерисовываем сетку при скролле
 
         let isDrawing = false;
+        let showForeignDrawings = true; // По умолчанию видим рисунки всех пользователей
+
         let lastX = 0, lastY = 0;
 
         // 2. ВЫБОР ЦВЕТА ИЗ ПАЛИТРЫ
@@ -527,6 +558,8 @@
             ws = new WebSocket(wsProtocol + window.location.host + "/ws/draw");
 
             ws.onmessage = function(event) {
+            // Если режим уединения включен — полностью игнорируем чужие мазки из сети
+                if (!showForeignDrawings) return;
                 const line = JSON.parse(event.data);
                 // При получении из сети вычитаем скролл, чтобы линии плыли синхронно с бумагой
                 drawAquarelleLine(line.prevX, line.prevY - window.pageYOffset, line.currX, line.currY - window.pageYOffset, line.color, line.size);
@@ -545,6 +578,11 @@
 
         // Загрузка истории из базы (с динамическим вычитанием скролла)
         function loadLinesFromServer() {
+        // Если чужие рисунки скрыты, при скролле или загрузке просто очищаем холст и не делаем fetch
+            if (!showForeignDrawings) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                return;
+            }
             fetch('/api/get_lines')
                 .then(res => res.json())
                 .then(data => {
@@ -618,6 +656,26 @@
             const damageY = (window.innerHeight / 2 - e.clientY) * 0.02;
             rabbit.style.transform = "translate(" + damageX + "px, " + damageY + "px)";
         });
+                // ФУНКЦИЯ ДЛЯ ПЕРЕКЛЮЧЕНИЯ РЕЖИМА УЕДИНЕНИЯ СТУДИИ BELLUNIUM
+        function toggleForeignDrawings() {
+            showForeignDrawings = !showForeignDrawings;
+            const btn = document.getElementById('toggle-overlay-btn');
+
+            if (!showForeignDrawings) {
+                // Включаем чистый режим: тушим иконку глаза и очищаем экран
+                btn.classList.add('muted');
+                btn.innerText = '🙈';
+                btn.title = "Показать чужие рисунки";
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+            } else {
+                // Возвращаем общий эфир: включаем глаз и подтягиваем линии из базы
+                btn.classList.remove('muted');
+                btn.innerText = '👁️';
+                btn.title = "Скрыть чужие рисунки";
+                loadLinesFromServer();
+            }
+        }
+
     </script>
 </body>
 </html>
