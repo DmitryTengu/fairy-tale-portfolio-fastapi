@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Анна-Анастасия Новик | Сказочные иллюстрации</title>
+
+    <link rel="preconnect" href="https://googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://googleapis.com/css2?family=Caveat:wght@500;700&family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            background-image: url('/static/images/paper.jpg');
+            background-color: #faf6ee;
+            background-repeat: repeat;
+            font-family: 'Inter', sans-serif;
+            color: #334155;
+            margin: 0; padding: 0;
+            min-height: 100vh;
+            scroll-behavior: smooth;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: ''; position: absolute;
+            top: -10%; right: -5%; width: 850px; height: 850px;
+            background: radial-gradient(circle, rgba(13, 148, 136, 0.15) 0%, transparent 70%);
+            z-index: -1; pointer-events: none;
+        }
+
+                /* ХОЛСТ СТРОГО НА ЗАДНЕМ ПЛАНЕ ПОД ВСЕМ КОНТЕНТОМ */
+        #drawingCanvas {
+            position: fixed !important;
+            top: 0;
+            left: 0;
+            width: 100vw !important;
+            height: 100vh !important;
+            z-index: -1 !important; /* Уводим в самый глубокий минус, под буквы и фото */
+            pointer-events: none;
+        }
+
+        .intro-section, .magazine-section, .gallery-section, .contacts-section, .lightbox {
+            position: relative;
+            z-index: 5 !important; /* Текст и заголовки гарантированно встают НАД линиями */
+            background: transparent !important;
+        }
+
+
+        .intro-section {
+            display: flex; min-height: 100vh; align-items: center;
+            max-width: 1200px; margin: 0 auto; padding: 4rem 3rem;
+            box-sizing: border-box; gap: 5rem;
+        }
+
+                .intro-text {
+            flex: 1.2;
+            max-width: 550px;
+            position: relative;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .intro-text h1 {
+            font-family: 'Playfair Display', serif; font-size: 4.2rem;
+            color: #0f172a; margin: 0 0 0.5rem 0; font-weight: 700; line-height: 1.15;
+            position: relative;
+        }
+
+        .intro-text h1::after {
+            content: '✨'; position: absolute; top: -20px; right: 40px;
+            font-size: 1.5rem; opacity: 0.8; animation: pulseStar 3s ease-in-out infinite;
+        }
+
+        @keyframes pulseStar {
+            0%, 100% { opacity: 0.4; transform: scale(0.9); }
+            50% { opacity: 1; transform: scale(1.1); }
+        }
+
+        .subtitle {
+            font-family: 'Caveat', cursive; color: #0d9488;
+            font-size: 2.4rem; margin-bottom: 2.5rem; font-weight: 700; letter-spacing: 0.03em;
+        }
+
+        .intro-text p { font-size: 1.15rem; line-height: 1.9; color: #475569; margin-bottom: 3.5rem; }
+        .intro-featured-art { flex: 1; display: flex; justify-content: center; align-items: center; min-width: 320px; }
+
+        .featured-art-frame {
+            position: relative; background: #ffffff; padding: 1.4rem;
+            box-shadow: 0 30px 60px -15px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(13, 148, 136, 0.05);
+            border-radius: 40px; max-width: 380px; width: 100%; cursor: zoom-in;
+            transition: transform 0.5s ease;
+        }
+
+        .featured-art-frame:hover { transform: scale(1.02) rotate(0.5deg); }
+        .featured-art-frame img { width: 100%; height: auto; display: block; border-radius: 24px; }
+
+        .rabbit-container-box {
+            position: absolute; z-index: 15; top: -65px !important; right: -70px !important;
+            bottom: auto !important; left: auto !important; width: 200px !important; pointer-events: none;
+            will-change: transform;
+        }
+
+        .floating-character {
+            width: 100% !important; height: auto; display: block;
+            filter: drop-shadow(0 12px 20px rgba(13, 148, 136, 0.15));
+            transform-origin: center bottom; animation: gentleWobble 5s ease-in-out infinite;
+        }
+
+        @keyframes gentleWobble {
+            0%, 100% { transform: rotate(-3deg) translateY(0); }
+            50% { transform: rotate(4deg) translateY(-6px); }
+        }
+
+        .scroll-btn {
+            display: inline-block; padding: 1.2rem 2.8rem;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); color: #ffffff;
+            text-decoration: none; font-family: 'Playfair Display', serif; font-style: italic;
+            font-size: 1.2rem; font-weight: 600; border-radius: 40px;
+            box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.2); border: 1px solid rgba(13, 148, 136, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .scroll-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 30px -5px rgba(13, 148, 136, 0.25); border-color: #0d9488; }
+        .magazine-section { max-width: 1200px; margin: 0 auto; padding: 6rem 2rem 4rem 2rem; }
+        .magazine-grid { display: grid; grid-template-cols: repeat(auto-fit, minmax(260px, 1fr)); gap: 3rem; }
+        .magazine-card { background: #ffffff; padding: 1rem; border-radius: 24px; box-shadow: 0 15px 35px rgba(15, 23, 42, 0.03); border: 1px solid rgba(214, 211, 209, 0.3); cursor: zoom-in; transition: transform 0.4s ease; }
+        .magazine-card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(13, 148, 136, 0.08); border-color: #0d9488; }
+        .magazine-img-holder { border-radius: 14px; overflow: hidden; background-color: #fafaf9; aspect-ratio: 4/3; }
+        .magazine-img-holder img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .magazine-card h4 { font-family: 'Playfair Display', serif; font-size: 1.15rem; color: #0f172a; text-align: center; margin: 1rem 0 0 0; min-height: 2.5rem; display: flex; align-items: center; justify-content: center; }
+
+        .gallery-section { max-width: 1100px; margin: 0 auto; padding: 4rem 2rem 6rem 2rem; border-top: 1px dashed rgba(13, 148, 136, 0.15); }
+        .section-title { text-align: center; font-family: 'Playfair Display', serif; font-size: 2.8rem; color: #0f172a; margin-bottom: 5rem; }
+        .book-container { background: #ffffff; padding: 2.5rem; border-radius: 32px; box-shadow: 0 30px 70px -20px rgba(15, 23, 42, 0.04); border: 1px solid rgba(214, 211, 209, 0.4); margin-bottom: 6rem; position: relative; }
+        .book-header { text-align: center; margin-bottom: 2rem; }
+        .book-header h3 { font-family: 'Playfair Display', serif; font-size: 2rem; color: #0f172a; margin: 0; }
+        .book-header p { font-family: 'Caveat', cursive; color: #0d9488; font-size: 1.5rem; margin: 0.3rem 0 0 0; }
+
+        .book-slider { position: relative; overflow: hidden; border-radius: 20px; background-color: #fafaf9; aspect-ratio: 16/10; width: 100%; }
+        .book-track { display: flex; width: 100%; height: 100%; transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+        .book-page { min-width: 100%; width: 100%; height: 100%; flex-shrink: 0; cursor: zoom-in; }
+        .book-page img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+        .nav-btn { position: absolute; top: 55%; transform: translateY(-50%); background: #ffffff; color: #0f172a; width: 55px; height: 55px; border-radius: 50%; border: 1px solid rgba(214, 211, 209, 0.6); display: flex; align-items: center; justify-content: center; font-size: 1.6rem; cursor: pointer; user-select: none; box-shadow: 0 10px 20px rgba(15, 23, 42, 0.04); transition: all 0.3s ease; z-index: 20; }
+        .nav-btn:hover { background: #0f172a; color: #ffffff; transform: translateY(-50%) scale(1.05); }
+        .prev-btn { left: -25px; } .next-btn { right: -25px; }
+
+        .contacts-section { background: rgba(255, 255, 255, 0.6); border-top: 1px dashed rgba(13, 148, 136, 0.15); padding: 7rem 2rem; }
+        .contacts-container { max-width: 1100px; margin: 0 auto; display: grid; grid-template-cols: 1fr 1.2fr; gap: 5rem; }
+        .contacts-info h2 { font-family: 'Playfair Display', serif; font-size: 2.6rem; color: #0f172a; margin: 0 0 1.5rem 0; }
+        .contacts-info p { font-size: 1.1rem; line-height: 1.8; color: #475569; margin-bottom: 3rem; }
+
+        .social-box { display: flex; flex-direction: column; gap: 1rem; }
+        .social-link { display: flex; align-items: center; gap: 1rem; padding: 1rem 1.5rem; background: #ffffff; border: 1px solid rgba(214, 211, 209, 0.5); border-radius: 16px; text-decoration: none; color: #334155; font-weight: 500; transition: all 0.3s ease; box-shadow: 0 4px 10px rgba(0,0,0,0.01); }
+        .social-link:hover { transform: translateX(5px); border-color: #0d9488; color: #0d9488; }
+
+        .contact-form { background: #ffffff; padding: 2.5rem; border-radius: 28px; box-shadow: 0 20px 50px -15px rgba(15, 23, 42, 0.04); border: 1px solid rgba(214, 211, 209, 0.4); }
+        .form-group { margin-bottom: 1.5rem; display: flex; flex-direction: column; gap: 0.5rem; }
+        .form-group label { font-size: 0.95rem; font-weight: 500; color: #0f172a; }
+        .form-group input, .form-group textarea { padding: 1rem; border-radius: 12px; border: 1px solid rgba(214, 211, 209, 0.6); background: #fafaf9; font-family: inherit; font-size: 1rem; transition: border-color 0.3s; }
+        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: #0d9488; background: #ffffff; }
+        .submit-btn { width: 100%; padding: 1.1rem; background: #0f172a; color: #ffffff; border: none; border-radius: 12px; font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.3rem; font-weight: 600; cursor: pointer; box-shadow: 0 8px 20px rgba(15, 23, 42, 0.1); transition: all 0.3s; }
+        .submit-btn:hover { background: #1e293b; transform: translateY(-2px); box-shadow: 0 12px 25px rgba(13, 148, 136, 0.2); }
+
+        .lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(15, 23, 42, 0.97); display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; z-index: 1000; padding: 2rem; }
+        .lightbox.active { opacity: 1; pointer-events: auto; }
+        .lightbox-img { max-width: 90%; max-height: 85vh; border-radius: 12px; transform: scale(0.95); transition: transform 0.4s ease; }
+        .lightbox.active .lightbox-img { transform: scale(1); }
+        .close-btn { position: absolute; top: 1.5rem; right: 2rem; color: #f5f5f4; font-size: 3rem; cursor: pointer; }
+
+                /* КРАСИВАЯ МОБИЛЬНАЯ ВЕРСТКА С ДОРОЖКАМИ ДЛЯ РИСОВАНИЯ */
+        @media (max-width: 968px) {
+            /* Задаем боковые отступы-паддинги для всех секций на телефоне */
+            .intro-section, .magazine-section, .gallery-section, .contacts-section {
+                padding-left: 45px !important;
+                padding-right: 45px !important;
+                box-sizing: border-box;
+            }
+
+            .intro-section {
+                flex-direction: column;
+                text-align: center;
+                padding-top: 5rem;
+                gap: 3rem;
+            }
+            .intro-text { max-width: 100%; }
+            .intro-text h1 { font-size: 2.8rem; }
+            .subtitle { font-size: 1.8rem; margin-bottom: 1.5rem; }
+            .intro-text p { font-size: 1rem; line-height: 1.7; margin-bottom: 2rem; }
+
+            /* Ужимаем рамку фото, чтобы она не съедала поля */
+            .featured-art-frame { max-width: 280px; padding: 1rem; border-radius: 30px; }
+            .rabbit-container-box { width: 140px !important; top: -50px !important; right: -40px !important; }
+
+            .magazine-grid { grid-template-cols: 1fr; gap: 2rem; }
+            .book-container { padding: 1.5rem; border-radius: 24px; margin-bottom: 4rem; }
+            .book-header h3 { font-size: 1.6rem; }
+            .contacts-container { grid-template-cols: 1fr; gap: 3rem; padding: 0; }
+            .contact-form { padding: 1.5rem; border-radius: 20px; }
+
+            .nav-btn { width: 40px; height: 40px; font-size: 1.1rem; }
+            .prev-btn { left: -15px; } .next-btn { right: -15px; }
+        }
+
+        @media (max-width: 550px) { .magazine-grid { grid-template-cols: 1fr; } }
+                /* КНОПКИ ВЫБОРА ЦВЕТА КИСТИ */
+        .color-palette {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: #ffffff;
+            padding: 10px;
+            border-radius: 30px;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.1);
+            border: 1px solid rgba(13, 148, 136, 0.15);
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+        }
+
+        .color-btn {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: transform 0.2s;
+        }
+
+        .color-btn:hover, .color-btn.active {
+            transform: scale(1.15);
+            border-color: #0f172a;
+        }
+
+        /* ВОЗВРАЩАЕМ ИСКОРКИ КУРСОРУ */
+        .magic-sparkle {
+            position: fixed; pointer-events: none; z-index: 9999; border-radius: 50%;
+            animation: fadeAndFadeOut 1s ease-out forwards;
+        }
+        @keyframes fadeAndFadeOut {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+        }
+                /* Запрещаем браузеру выделять и перетаскивать любые картинки на сайте */
+        img {
+            -webkit-user-select: none;
+            -webkit-user-drag: none;
+            user-select: none;
+        }
+        /* ПОЛНЫЙ ЗАПРЕТ СЛУЧАЙНОГО ВЫДЕЛЕНИЯ ТЕКСТА ПРИ РИСОВАНИИ НА ПОЛЯХ */
+        h1, h2, h3, h4, .section-title, .subtitle {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+                /* ЖЕСТКИЙ ЗАПРЕТ ВЫДЕЛЕНИЯ ЛЮБОГО ТЕКСТА ПРИ РИСОВАНИИ */
+        *, h1, h2, h3, h4, p, label, span, div, section {
+            -webkit-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            user-select: none !important;
+        }
+
+        /* Разрешаем ввод текста только в сами поля формы, чтобы их можно было заполнять */
+        input, textarea {
+            -webkit-user-select: text !important;
+            user-select: text !important;
+        }
+
+    </style>
+</head>
+<body>
+    <canvas id="drawingCanvas"></canvas>
+        <!-- Палитра для выбора цвета акварели -->
+    <div class="color-palette">
+        <div class="color-btn active" style="background: #0d9488;" onclick="changeMyColor('#0d9488', this)"></div>
+        <div class="color-btn" style="background: #2dd4bf;" onclick="changeMyColor('#2dd4bf', this)"></div>
+        <div class="color-btn" style="background: #f59e0b;" onclick="changeMyColor('#f59e0b', this)"></div>
+        <div class="color-btn" style="background: #ec4899;" onclick="changeMyColor('#ec4899', this)"></div>
+    </div>
+
+    <section class="intro-section">
+        <div class="intro-text">
+            <h1>Анна-Анастасия Новик</h1>
+            <div class="subtitle">Иллюстрации, в которых оживают сказки...</div>
+            <p>
+                Приветствую! Я создаю живые, тёплые и сказочные иллюстрации, которые вдохнут душу в истории на бумаге. В своих работах я бережно сочетаю мягкую классическую акварель и безграничные возможности цифровой графики, помогая детям и взрослым погрузиться в уютные миры книг и журналов.
+            </p>
+            <a href="#portfolio" class="scroll-btn">Заглянуть в сказку</a>
+        </div>
+
+        <div class="intro-featured-art">
+            <div class="featured-art-frame" onclick="openLightbox('/static/images/photo.jpg')">
+                <img src="/static/images/photo.jpg" alt="Анна-Анастасия Новик">
+                <div id="rabbit-parallax" class="rabbit-container-box">
+                    <img src="/static/images/character1.png" class="floating-character" alt="Сказочный персонаж">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- БЛОК ПОРТФОЛИО -->
+    <section id="portfolio" class="magazine-section">
+        <h2 class="section-title">Избранное портфолио</h2>
+
+        <div class="magazine-grid">
+            {% for item in portfolio %}
+            <div class="magazine-card" onclick="openLightbox('/static/images/{{ item.image }}')">
+                <div class="magazine-img-holder">
+                    <img src="/static/images/{{ item.image }}" alt="{{ item.title }}">
+                </div>
+                <h4>{{ item.title }}</h4>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    <!-- БЛОК ИНТЕРАКТИВНЫХ КНИГ -->
+    <section class="gallery-section">
+        <h2 class="section-title">Интерактивные книжные проекты</h2>
+
+        {% for book in books %}
+        <div class="book-container" id="book-{{ loop.index0 }}">
+            <div class="book-header">
+                <h3>{{ book.title }}</h3>
+                <p>{{ book.subtitle }}</p>
+            </div>
+
+            <div class="book-slider">
+                <div class="book-track">
+                    {% for page in book.pages %}
+                    <div class="book-page" onclick="openLightbox('/static/images/{{ page }}')">
+                        <img src="/static/images/{{ page }}" alt="Страница книги">
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="nav-btn prev-btn" onclick="slideBook({{ loop.index0 }}, -1)">‹</div>
+            <div class="nav-btn next-btn" onclick="slideBook({{ loop.index0 }}, 1)">›</div>
+        </div>
+        {% endfor %}
+    </section>
+
+    <!-- БЛОК КОНТАКТОВ -->
+    <section class="contacts-section">
+        <div class="contacts-container">
+            <div class="contacts-info">
+                <h2>Сказочные контакты</h2>
+                <p>
+                    Если вам понравились мои иллюстрации, и вы хотите заказать оформление детской книги, журнала или обсудить творческий проект — я всегда открыта к сотрудничеству! Напишите мне в удобной социальной сети или заполните форму рядом.
+                </p>
+                <div class="social-box">
+                    <a href="https://t.me/angry_miu" target="_blank" class="social-link">
+                        <span>💬 Telegram: @angry_miu</span>
+                    </a>
+                    <a href="https://instagram.com/angry_miu" target="_blank" class="social-link">
+                        <span>📸 Instagram: @angry_miu</span>
+                    </a>
+                </div>
+            </div>
+
+            <form class="contact-form" onsubmit="event.preventDefault(); alert('Спасибо! Письмо отправлено Анне-Анастасии ✨');">
+                <div class="form-group">
+                    <label for="name">Ваше имя или издательство</label>
+                    <input type="text" id="name" required placeholder="Например, Издательство Адукацыя">
+                </div>
+                <div class="form-group">
+                    <label for="email">Ваш Email или Telegram для связи</label>
+                    <input type="text" id="email" required placeholder="Например, ivan@mail.ru">
+                </div>
+                <div class="form-group">
+                    <label for="message">Расскажите о вашей будущей книге</label>
+                    <textarea id="message" rows="4" required placeholder="Каких персонажей нужно нарисовать?"></textarea>
+                </div>
+                <button type="submit" class="submit-btn">Отправить весточку</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Окно Lightbox -->
+    <div id="lightboxOverlay" class="lightbox" onclick="closeLightbox()">
+        <span class="close-btn">&times;</span>
+        <img id="lightboxImage" class="lightbox-img" src="" alt="Просмотр">
+    </div>
+
+        <!-- ИНТЕРАКТИВНАЯ ЛОГИКА JAVASCRIPT БЕЗ БАГОВ -->
+    <script>
+               // 1. НАСТРОЙКА ХОЛСТА И ЛИНЕЙНЫЕ РАЗМЕРЫ
+        const canvas = document.getElementById('drawingCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.style.position = 'fixed'; // Фиксируем холст на экране
+
+                function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            loadLinesFromServer();
+        }
+
+
+        window.addEventListener('resize', resizeCanvas);
+        window.addEventListener('load', resizeCanvas);
+        window.addEventListener('scroll', loadLinesFromServer);
+
+        let isDrawing = false;
+        let lastX = 0, lastY = 0;
+
+        // 2. ВЫБОР ЦВЕТА ИЗ ПАЛИТРЫ
+        let currentBrushColor = 'rgba(13, 148, 136, 0.25)';
+        function changeMyColor(hexColor, buttonElement) {
+            if (hexColor === '#0d9488') currentBrushColor = 'rgba(13, 148, 136, 0.25)';
+            if (hexColor === '#2dd4bf') currentBrushColor = 'rgba(45, 212, 191, 0.25)';
+            if (hexColor === '#f59e0b') currentBrushColor = 'rgba(245, 158, 11, 0.25)';
+            if (hexColor === '#ec4899') currentBrushColor = 'rgba(236, 72, 153, 0.25)';
+            document.querySelectorAll('.color-btn').forEach(btn => btn.classList.remove('active'));
+            buttonElement.classList.add('active');
+        }
+
+        // 3. ЗАЩИТА ТЕКСТА ПО ЦЕНТРУ ОТ РИСОВАНИЯ
+        function isClickInTextZone(clientX) {
+            const screenCenter = window.innerWidth / 2;
+            const limit = window.innerWidth > 968 ? 320 : 120;
+            return clientX > (screenCenter - limit) && clientX < (screenCenter + limit);
+        }
+
+                // Чистый экранный расчет координат без прибавления скролла
+        function getCoords(clientX, clientY) {
+            return {
+                x: clientX,
+                y: clientY
+            };
+        }
+
+
+
+                        // 4. ОБРАБОТКА МЫШКИ (ПК) - СБРОС БЕСКОНЕЧНОЙ ЛИНИИ
+        document.addEventListener('mousedown', (e) => {
+            if (isClickInTextZone(e.clientX)) return;
+            if (e.target.tagName === 'IMG' || e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'BUTTON' || e.target.closest('.nav-btn') || e.target.closest('.scroll-btn') || e.target.closest('.magazine-card') || e.target.closest('.book-container') || e.target.closest('.social-link') || e.target.closest('.lightbox') || e.target.closest('.color-palette')) return;
+
+            isDrawing = true;
+            lastX = e.clientX;
+            lastY = e.clientY;
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isDrawing) return;
+            const coords = getCoords(e.clientX, e.clientY);
+            const currX = coords.x;
+            const currY = coords.y;
+
+            // Рисуем линию в абсолютных координатах страницы
+            drawAquarelleLine(lastX, lastY, currX, currY, currentBrushColor, 6);
+
+                        // Отправляем в базу точные координаты с учетом текущего скролла страницы
+            fetch('/api/save_line', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    prevX: lastX,
+                    prevY: lastY + window.pageYOffset,
+                    currX: currX,
+                    currY: currY + window.pageYOffset,
+                    color: currentBrushColor,
+                    size: 6
+                })
+            }).catch(err => console.log("Ошибка сохранения:", err));
+
+
+            lastX = currX;
+            lastY = currY;
+        });
+
+        document.addEventListener('touchmove', (e) => {
+            if (!isDrawing || !e.touches || e.touches.length === 0) return;
+            const touch = e.touches[0];
+            const coords = getCoords(touch.clientX, touch.clientY);
+            const currX = coords.x;
+            const currY = coords.y;
+
+            drawAquarelleLine(lastX, lastY, currX, currY, currentBrushColor, 6);
+
+            fetch('/api/save_line', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    prevX: lastX,
+                    prevY: lastY,
+                    currX: currX,
+                    currY: currY,
+                    color: currentBrushColor,
+                    size: 6
+                })
+            }).catch(err => console.log("Ошибка сохранения:", err));
+
+            lastX = currX;
+            lastY = currY;
+        }, { passive: true });
+
+        document.addEventListener('mouseup', () => isDrawing = false);
+        document.addEventListener('touchend', () => isDrawing = false);
+        document.addEventListener('touchcancel', () => isDrawing = false);
+
+        // 6. ФУНКЦИЯ КРАСИВОЙ ОТРИСОВКИ МАЗКА
+        function drawAquarelleLine(x1, y1, x2, y2, color, size) {
+            ctx.strokeStyle = color; ctx.lineWidth = size;
+            ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+            ctx.shadowBlur = 4; ctx.shadowColor = color;
+            ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2);
+            ctx.stroke();
+        }
+
+                // 7. ЗАГРУЗКА РИСУНКОВ ИЗ БАЗЫ SQLITE СТУДИИ BELLUNIUM
+        function loadLinesFromServer() {
+            fetch('/api/get_lines')
+                .then(res => res.json())
+                .then(data => {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    if (!data.lines) return;
+
+                    data.lines.forEach(line => {
+                        // Магия: вычитаем текущий скролл окна, чтобы штрихи визуально двигались вместе с текстом!
+                        drawAquarelleLine(
+                            line.prevX,
+                            line.prevY - window.pageYOffset,
+                            line.currX,
+                            line.currY - window.pageYOffset,
+                            line.color,
+                            line.size
+                        );
+                    });
+                }).catch(err => console.log("Ошибка загрузки:", err));
+        }
+
+
+        setInterval(loadLinesFromServer, 3000);
+        setTimeout(loadLinesFromServer, 500);
+
+        // 8. СЛАЙДЕРЫ КНИГ
+        const bookPositions = {};
+        function slideBook(bookIndex, direction) {
+            const bookContainer = document.getElementById(`book-${bookIndex}`);
+            const track = bookContainer.querySelector('.book-track');
+            const pages = bookContainer.querySelectorAll('.book-page');
+            let pos = (bookPositions[bookIndex] || 0) + direction;
+            if (pos >= pages.length) pos = 0; else if (pos < 0) pos = pages.length - 1;
+            bookPositions[bookIndex] = pos;
+            track.style.transform = `translateX(-${pos * 100}%)`;
+        }
+
+        // 9. ОКНО LIGHTBOX (ПРОСМОТР КАРТИНОК)
+        const overlay = document.getElementById('lightboxOverlay');
+        const lightboxImg = document.getElementById('lightboxImage');
+        function openLightbox(src) { lightboxImg.src = src; overlay.classList.add('active'); document.body.style.overflow = 'hidden'; }
+        function closeLightbox() { overlay.classList.remove('active'); document.body.style.overflow = ''; setTimeout(() => { lightboxImg.src = ''; }, 400); }
+
+        // 10. ВОЛШЕБНЫЙ ЗВЕЗДНЫЙ ШЛЕЙФ ✨
+        document.addEventListener('mousemove', function(e) {
+            const sparkle = document.createElement('div');
+            sparkle.className = 'magic-sparkle';
+            sparkle.style.position = 'fixed';
+
+            const size = Math.random() * 8 + 4;
+            sparkle.style.width = sparkle.style.height = `${size}px`;
+            sparkle.style.left = `${e.clientX}px`;
+            sparkle.style.top = `${e.clientY}px`;
+
+            const colors = ['#f59e0b', '#0d9488', '#2dd4bf', '#ec4899'];
+            sparkle.style.background = colors[Math.floor(Math.random() * colors.length)];
+
+            if (Math.random() > 0.4) {
+                sparkle.innerHTML = '✨';
+                sparkle.style.background = 'transparent';
+                sparkle.style.fontSize = `${size * 1.5}px`;
+            }
+            document.body.appendChild(sparkle);
+            setTimeout(() => sparkle.remove(), 1000);
+        });
+    </script>
+</body>
+</html>
