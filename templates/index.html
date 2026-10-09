@@ -30,22 +30,24 @@
             z-index: -1; pointer-events: none;
         }
 
-                /* ХОЛСТ СТРОГО НА ЗАДНЕМ ПЛАНЕ ПОД ВСЕМ КОНТЕНТОМ */
+                /* ХОЛСТ НА СВЕРХТОЧНОМ ЭКРАННОМ ОВЕРЛЕЕ СТУДИИ BELLUNIUM */
         #drawingCanvas {
-            position: fixed !important;
+            position: fixed !important; /* Фиксируем строго в окне браузера */
             top: 0;
             left: 0;
-            width: 100vw !important;
-            height: 100vh !important;
-            z-index: -1 !important; /* Уводим в самый глубокий минус, под буквы и фото */
-            pointer-events: none;
+            width: 100vw !important; /* Строго на всю ширину окна */
+            height: 100vh !important; /* Строго на всю высоту окна */
+            z-index: 1 !important; /* Уводим под буквы и фреймы картинок */
+            pointer-events: none; /* Клики пролетают сквозь холст на кнопки */
         }
 
-        .intro-section, .magazine-section, .gallery-section, .contacts-section, .lightbox {
+        .intro-section, .magazine-section, .gallery-section, .contacts-section {
             position: relative;
-            z-index: 5 !important; /* Текст и заголовки гарантированно встают НАД линиями */
+            z-index: 5 !important;
             background: transparent !important;
         }
+
+
 
 
         .intro-section {
@@ -164,11 +166,29 @@
         .submit-btn { width: 100%; padding: 1.1rem; background: #0f172a; color: #ffffff; border: none; border-radius: 12px; font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.3rem; font-weight: 600; cursor: pointer; box-shadow: 0 8px 20px rgba(15, 23, 42, 0.1); transition: all 0.3s; }
         .submit-btn:hover { background: #1e293b; transform: translateY(-2px); box-shadow: 0 12px 25px rgba(13, 148, 136, 0.2); }
 
-        .lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(15, 23, 42, 0.97); display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; z-index: 1000; padding: 2rem; }
-        .lightbox.active { opacity: 1; pointer-events: auto; }
-        .lightbox-img { max-width: 90%; max-height: 85vh; border-radius: 12px; transform: scale(0.95); transition: transform 0.4s ease; }
+                /* ОКНО LIGHTBOX С ТРИУМФАЛЬНЫМ ГЛУБОКИМ ЗАТЕМНЕНИЕМ ФОНА */
+        .lightbox {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            background-color: rgba(15, 23, 42, 0.95) !important; /* Намертво прибиваем тёмный полумрак */
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+            z-index: 999999 !important; /* Поднимаем на самый высокий слой в космос поверх холста и форм */
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+        .lightbox.active { opacity: 1 !important; pointer-events: auto !important; }
+        .lightbox-img { max-width: 90%; max-height: 85vh; border-radius: 12px; transform: scale(0.95); transition: transform 0.4s ease; z-index: 1000000 !important; }
         .lightbox.active .lightbox-img { transform: scale(1); }
-        .close-btn { position: absolute; top: 1.5rem; right: 2rem; color: #f5f5f4; font-size: 3rem; cursor: pointer; }
+        .close-btn { position: absolute; top: 1.5rem; right: 2rem; color: #f5f5f4; font-size: 3rem; cursor: pointer; z-index: 1000001 !important; }
+
 
                 /* КРАСИВАЯ МОБИЛЬНАЯ ВЕРСТКА С ДОРОЖКАМИ ДЛЯ РИСОВАНИЯ */
         @media (max-width: 968px) {
@@ -385,24 +405,28 @@
         <span class="close-btn">&times;</span>
         <img id="lightboxImage" class="lightbox-img" src="" alt="Просмотр">
     </div>
-
-        <!-- ИНТЕРАКТИВНАЯ ЛОГИКА JAVASCRIPT БЕЗ БАГОВ -->
+         <!-- ИНТЕРАКТИВНАЯ ЛОГИКА JAVASCRIPT BELLUNIUM -->
     <script>
-               // 1. НАСТРОЙКА ХОЛСТА И ЛИНЕЙНЫЕ РАЗМЕРЫ
+        // 1. НАСТРОЙКА ХОЛСТА И ЛИНЕЙНЫХ РАЗМЕРОВ
         const canvas = document.getElementById('drawingCanvas');
         const ctx = canvas.getContext('2d');
-        canvas.style.position = 'fixed'; // Фиксируем холст на экране
 
-                function resizeCanvas() {
+        // Возвращаем холсту мёртвую фиксацию на стекле экрана (убираем искажения)
+        canvas.style.position = 'fixed';
+        canvas.style.top = '0';
+        canvas.style.left = '0';
+        canvas.style.width = '100vw';
+        canvas.style.height = '100vh';
+
+        function resizeCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
             loadLinesFromServer();
         }
 
-
         window.addEventListener('resize', resizeCanvas);
         window.addEventListener('load', resizeCanvas);
-        window.addEventListener('scroll', loadLinesFromServer);
+        window.addEventListener('scroll', loadLinesFromServer); // Перерисовываем сетку при скролле
 
         let isDrawing = false;
         let lastX = 0, lastY = 0;
@@ -425,24 +449,20 @@
             return clientX > (screenCenter - limit) && clientX < (screenCenter + limit);
         }
 
-                // Чистый экранный расчет координат без прибавления скролла
+        // Возвращаем чистые экранные координаты, так как холст зафиксирован
         function getCoords(clientX, clientY) {
-            return {
-                x: clientX,
-                y: clientY
-            };
+            return { x: clientX, y: clientY };
         }
 
-
-
-                        // 4. ОБРАБОТКА МЫШКИ (ПК) - СБРОС БЕСКОНЕЧНОЙ ЛИНИИ
+        // 4. ОБРАБОТКА МЫШКИ (ПК) - ИСПРАВЛЕНЫ СТАРТОВЫЕ ТОЧКИ
         document.addEventListener('mousedown', (e) => {
             if (isClickInTextZone(e.clientX)) return;
             if (e.target.tagName === 'IMG' || e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'BUTTON' || e.target.closest('.nav-btn') || e.target.closest('.scroll-btn') || e.target.closest('.magazine-card') || e.target.closest('.book-container') || e.target.closest('.social-link') || e.target.closest('.lightbox') || e.target.closest('.color-palette')) return;
 
             isDrawing = true;
-            lastX = e.clientX;
-            lastY = e.clientY;
+            const coords = getCoords(e.clientX, e.clientY);
+            lastX = coords.x;
+            lastY = coords.y;
         });
 
         document.addEventListener('mousemove', (e) => {
@@ -451,27 +471,28 @@
             const currX = coords.x;
             const currY = coords.y;
 
-            // Рисуем линию в абсолютных координатах страницы
+            // Локально рисуем на fixed холсте пиксель в пиксель строго под мышкой
             drawAquarelleLine(lastX, lastY, currX, currY, currentBrushColor, 6);
 
-                        // Отправляем в базу точные координаты с учетом текущего скролла страницы
-            fetch('/api/save_line', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    prevX: lastX,
-                    prevY: lastY + window.pageYOffset,
-                    currX: currX,
-                    currY: currY + window.pageYOffset,
-                    color: currentBrushColor,
-                    size: 6
-                })
-            }).catch(err => console.log("Ошибка сохранения:", err));
-
+            // На сервер шлём С УЧЁТОМ скролла, чтобы привязать мазок к тексту намертво
+            sendLine(lastX, lastY + window.pageYOffset, currX, currY + window.pageYOffset, currentBrushColor, 6);
 
             lastX = currX;
             lastY = currY;
         });
+
+        // 5. ОБРАБОТКА ПАЛЬЦА (СМАРТФОНЫ)
+        document.addEventListener('touchstart', (e) => {
+            if (!e.touches || e.touches.length === 0) return;
+            const touch = e.touches[0];
+            if (isClickInTextZone(touch.clientX)) return;
+            if (e.target.tagName === 'IMG' || e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'BUTTON' || e.target.closest('.nav-btn') || e.target.closest('.scroll-btn') || e.target.closest('.magazine-card') || e.target.closest('.book-container') || e.target.closest('.social-link') || e.target.closest('.lightbox') || e.target.closest('.color-palette')) return;
+
+            isDrawing = true;
+            const coords = getCoords(touch.clientX, touch.clientY);
+            lastX = coords.x;
+            lastY = coords.y;
+        }, { passive: true });
 
         document.addEventListener('touchmove', (e) => {
             if (!isDrawing || !e.touches || e.touches.length === 0) return;
@@ -481,19 +502,7 @@
             const currY = coords.y;
 
             drawAquarelleLine(lastX, lastY, currX, currY, currentBrushColor, 6);
-
-            fetch('/api/save_line', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    prevX: lastX,
-                    prevY: lastY,
-                    currX: currX,
-                    currY: currY,
-                    color: currentBrushColor,
-                    size: 6
-                })
-            }).catch(err => console.log("Ошибка сохранения:", err));
+            sendLine(lastX, lastY + window.pageYOffset, currX, currY + window.pageYOffset, currentBrushColor, 6);
 
             lastX = currX;
             lastY = currY;
@@ -511,50 +520,72 @@
             ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2);
             ctx.stroke();
         }
+        // 7. НАСТРОЙКА ЖИВОГО СОКЕТ-ТУННЕЛЯ WEBSOCKET
+        let ws;
+        function connectWebSocket() {
+            const wsProtocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+            ws = new WebSocket(wsProtocol + window.location.host + "/ws/draw");
 
-                // 7. ЗАГРУЗКА РИСУНКОВ ИЗ БАЗЫ SQLITE СТУДИИ BELLUNIUM
+            ws.onmessage = function(event) {
+                const line = JSON.parse(event.data);
+                // При получении из сети вычитаем скролл, чтобы линии плыли синхронно с бумагой
+                drawAquarelleLine(line.prevX, line.prevY - window.pageYOffset, line.currX, line.currY - window.pageYOffset, line.color, line.size);
+            };
+
+            ws.onclose = function() {
+                setTimeout(connectWebSocket, 3000);
+            };
+        }
+
+        function sendLine(pX, pY, cX, cY, color, size) {
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({ prevX: pX, prevY: pY, currX: cX, currY: cY, color: color, size: size }));
+            }
+        }
+
+        // Загрузка истории из базы (с динамическим вычитанием скролла)
         function loadLinesFromServer() {
             fetch('/api/get_lines')
                 .then(res => res.json())
                 .then(data => {
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
                     if (!data.lines) return;
-
                     data.lines.forEach(line => {
-                        // Магия: вычитаем текущий скролл окна, чтобы штрихи визуально двигались вместе с текстом!
-                        drawAquarelleLine(
-                            line.prevX,
-                            line.prevY - window.pageYOffset,
-                            line.currX,
-                            line.currY - window.pageYOffset,
-                            line.color,
-                            line.size
-                        );
+                        drawAquarelleLine(line.prevX, line.prevY - window.pageYOffset, line.currX, line.currY - window.pageYOffset, line.color, line.size);
                     });
-                }).catch(err => console.log("Ошибка загрузки:", err));
+                }).catch(err => console.log("Ошибка загрузки истории:", err));
         }
 
-
-        setInterval(loadLinesFromServer, 3000);
-        setTimeout(loadLinesFromServer, 500);
+        window.addEventListener('DOMContentLoaded', () => { resizeCanvas(); connectWebSocket(); });
 
         // 8. СЛАЙДЕРЫ КНИГ
         const bookPositions = {};
         function slideBook(bookIndex, direction) {
-            const bookContainer = document.getElementById(`book-${bookIndex}`);
+            const bookContainer = document.getElementById("book-" + bookIndex);
             const track = bookContainer.querySelector('.book-track');
             const pages = bookContainer.querySelectorAll('.book-page');
             let pos = (bookPositions[bookIndex] || 0) + direction;
             if (pos >= pages.length) pos = 0; else if (pos < 0) pos = pages.length - 1;
             bookPositions[bookIndex] = pos;
-            track.style.transform = `translateX(-${pos * 100}%)`;
+            track.style.transform = "translateX(-" + (pos * 100) + "%)";
         }
 
-        // 9. ОКНО LIGHTBOX (ПРОСМОТР КАРТИНОК)
+        // 9. ОКНО LIGHTBOX (ПРОСМОТР КАРТИНОК С ЖЕСТКИМ ПОЛНЫМ ЗАТЕМНЕНИЕМ)
         const overlay = document.getElementById('lightboxOverlay');
         const lightboxImg = document.getElementById('lightboxImage');
-        function openLightbox(src) { lightboxImg.src = src; overlay.classList.add('active'); document.body.style.overflow = 'hidden'; }
-        function closeLightbox() { overlay.classList.remove('active'); document.body.style.overflow = ''; setTimeout(() => { lightboxImg.src = ''; }, 400); }
+
+        function openLightbox(src) {
+            if (!src) return;
+            lightboxImg.src = src;
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+            setTimeout(() => { lightboxImg.src = ''; }, 400);
+        }
 
         // 10. ВОЛШЕБНЫЙ ЗВЕЗДНЫЙ ШЛЕЙФ ✨
         document.addEventListener('mousemove', function(e) {
@@ -563,9 +594,9 @@
             sparkle.style.position = 'fixed';
 
             const size = Math.random() * 8 + 4;
-            sparkle.style.width = sparkle.style.height = `${size}px`;
-            sparkle.style.left = `${e.clientX}px`;
-            sparkle.style.top = `${e.clientY}px`;
+            sparkle.style.width = sparkle.style.height = size + "px";
+            sparkle.style.left = e.clientX + "px";
+            sparkle.style.top = e.clientY + "px";
 
             const colors = ['#f59e0b', '#0d9488', '#2dd4bf', '#ec4899'];
             sparkle.style.background = colors[Math.floor(Math.random() * colors.length)];
@@ -573,11 +604,24 @@
             if (Math.random() > 0.4) {
                 sparkle.innerHTML = '✨';
                 sparkle.style.background = 'transparent';
-                sparkle.style.fontSize = `${size * 1.5}px`;
+                sparkle.style.fontSize = (size * 1.5) + "px";
             }
             document.body.appendChild(sparkle);
             setTimeout(() => sparkle.remove(), 1000);
         });
+
+        // 11. ИНТЕРАКТИВНЫЙ 3D-ПАРАЛЛАКС ДЛЯ КРОЛИКА СТУДИИ BELLUNIUM
+        document.addEventListener('mousemove', function(e) {
+            const rabbit = document.getElementById('rabbit-parallax');
+            if (!rabbit) return;
+            const damageX = (window.innerWidth / 2 - e.clientX) * 0.02;
+            const damageY = (window.innerHeight / 2 - e.clientY) * 0.02;
+            rabbit.style.transform = "translate(" + damageX + "px, " + damageY + "px)";
+        });
     </script>
 </body>
 </html>
+
+
+
+
