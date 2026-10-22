@@ -1,0 +1,23 @@
+[
+  {
+    "image": "characters/tsmok.png",
+    "name": "Цмок",
+    "book": "Пачастунак для Цмока",
+    "section": "portfolio",
+    "left": 91,
+    "top": 4,
+    "size": 90,
+    "rot": 6,
+    "hint": "Выглядывает среди избранных работ"
+  },
+  {
+    "image": "characters/lisenok.png",
+    "name": "Лисёнок",
+    "book": "Приключения Lисёнка",
+    "section": "gallery",
+    "left": 2,
+    "top": 20,
+    "size": 80,
+    "rot": -6
+  }
+]

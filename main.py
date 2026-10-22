@@ -1,46 +1,78 @@
+import json
+import secrets
 import sqlite3
 import time
-import json
-from typing import List
+from contextlib import closing
+from pathlib import Path
+from typing import List, Optional
+
+from datetime import datetime
+
 from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
+from fastapi.concurrency import run_in_threadpool
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from pydantic import BaseModel
+
+import contact
+from drawing import ADD_PER_REMOVED, RateLimiter, is_clear, parse_cut, parse_line, valid_cid
+from site_data import (
+    BOOKS, IMAGES_DIR, MAGAZINE_PORTFOLIO, SERVICES, STEPS, load_characters, make_img_resolver,
+    report_missing_images,
+)
+
+BASE_DIR = Path(__file__).resolve().parent
+DB_PATH = BASE_DIR / "drawings.db"
+STATIC_DIR = BASE_DIR / "static"
+
+LINE_LIFETIME = 1800     # секунд: мазки старше 30 минут стираются
+MAX_LINES_IN_DB = 20000  # страховка от разрастания базы
+
+# Папка static нужна приложению при старте: если её нет, создаём пустую,
+# иначе сервер падает с ошибкой, ещё не показав страницу.
+IMAGES_DIR.mkdir(parents=True, exist_ok=True)
 
 app = FastAPI()
-
-# Монтируем статику и шаблоны
-app.mount("/static", StaticFiles(directory="static"), name="static")
-templates = Jinja2Templates(directory="templates")
+app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+templates = Jinja2Templates(directory=BASE_DIR / "templates")
 
 
-# Модель данных для сохранения (оставляем для совместимости, если нужна)
-class DrawingLine(BaseModel):
-    prevX: float
-    prevY: float
-    currX: float
-    currY: float
-    color: str
-    size: float
+def connect_db() -> sqlite3.Connection:
+    return sqlite3.connect(DB_PATH)
 
 
 # Инициализация базы данных SQLite
 def init_db():
-    conn = sqlite3.connect("drawings.db")
-    cursor = conn.cursor()
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS lines (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            prevX REAL, prevY REAL, currX REAL, currY REAL,
-            color TEXT, size REAL, timestamp REAL
-        )
-    """)
-    conn.commit()
-    conn.close()
+    with closing(connect_db()) as conn:
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS lines (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                prevX REAL, prevY REAL, currX REAL, currY REAL,
+                color TEXT, size REAL, timestamp REAL,
+                lid TEXT DEFAULT '', cid TEXT DEFAULT '', brush TEXT DEFAULT 'w'
+            )
+        """)
+        # Старая база без колонок lid/cid: добавляем их
+        columns = {row[1] for row in conn.execute("PRAGMA table_info(lines)")}
+        for name in ("lid", "cid", "brush"):
+            if name not in columns:
+                default = "w" if name == "brush" else ""
+                conn.execute(f"ALTER TABLE lines ADD COLUMN {name} TEXT DEFAULT '{default}'")
+        conn.execute("CREATE INDEX IF NOT EXISTS idx_lines_lid ON lines(lid)")
+        conn.commit()
 
 
 init_db()
+report_missing_images()
+
+
+def insert_line(conn: sqlite3.Connection, line: dict, cid: str):
+    conn.execute(
+        "INSERT INTO lines (prevX, prevY, currX, currY, color, size, timestamp, lid, cid, brush) "
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        (line["prevX"], line["prevY"], line["currX"], line["currY"],
+         line["color"], line["size"], time.time(), line["lid"], cid, line["brush"])
+    )
 
 
 # =====================================================================
@@ -55,16 +87,18 @@ class ConnectionManager:
         self.active_connections.append(websocket)
 
     def disconnect(self, websocket: WebSocket):
-        self.active_connections.remove(websocket)
+        if websocket in self.active_connections:
+            self.active_connections.remove(websocket)
 
-    async def broadcast(self, message: str):
-        # Рассылаем мазок абсолютно всем подключенным пользователям
-        for connection in self.active_connections:
+    async def broadcast(self, message: str, exclude: Optional[WebSocket] = None):
+        # Рассылаем мазок всем, кроме автора (он уже нарисовал его у себя)
+        for connection in list(self.active_connections):
+            if connection is exclude:
+                continue
             try:
                 await connection.send_text(message)
             except Exception:
-                # Если кто-то отвалился, не ломаем рассылку остальным
-                pass
+                self.disconnect(connection)
 
 
 manager = ConnectionManager()
@@ -76,68 +110,80 @@ manager = ConnectionManager()
 
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
-    # Очистка базы от линий старше 30 минут
-    conn = sqlite3.connect("drawings.db")
-    cursor = conn.cursor()
-    now = time.time()
-    cursor.execute("DELETE FROM lines WHERE ? - timestamp > 1800", (now,))
-    conn.commit()
-    conn.close()
-
-    magazine_portfolio = [
-        {"image": "portfolio1.JPG", "title": "Журналы «Матуліна сонейка» и «Заикина библиотека»"},
-        {"image": "portfolio2.JPG", "title": "Иллюстрации к книге «Пачастунак для Цмока»"},
-        {"image": "portfolio3.JPG", "title": "Иллюстрации к книге «Падарожжа ў Новы Год»"},
-        {"image": "portfolio4.JPG", "title": "Проявление заботы"}
-    ]
-
-    books = [
-        {
-            "title": "Пачастунак для Цмока",
-            "subtitle": "Рассмотреть развороты книги",
-            "pages": ["tsmok_1.jpg", "tsmok_2.jpg", "tsmok_3.jpg", "tsmok_4.jpg", "tsmok_5.jpg", "tsmok_6.jpg"]
-        },
-        {
-            "title": "Приключения Lисёнка",
-            "subtitle": "Серия детских иллюстраций",
-            "pages": ["lisenok_1.jpg", "lisenok_2.jpg", "lisenok_3.jpg", "lisenok_4.jpg"]
-        },
-        {
-            "title": "Падарожжа ў Новы Год",
-            "subtitle": "Зимняя сказка",
-            "pages": ["novigod_1.jpg", "novigod_2.jpg", "novigod_3.jpg", "novigod_4.jpg"]
-        }
-    ]
+    # Очистка базы: старые линии и всё, что сверх лимита
+    with closing(connect_db()) as conn:
+        conn.execute("DELETE FROM lines WHERE ? - timestamp > ?", (time.time(), LINE_LIFETIME))
+        conn.execute(
+            "DELETE FROM lines WHERE id NOT IN (SELECT id FROM lines ORDER BY id DESC LIMIT ?)",
+            (MAX_LINES_IN_DB,),
+        )
+        conn.commit()
 
     return templates.TemplateResponse(
         request=request,
         name="index.html",
-        context={"portfolio": magazine_portfolio, "books": books}
+        context={
+            "portfolio": MAGAZINE_PORTFOLIO,
+            "books": BOOKS,
+            "services": SERVICES,
+            "steps": STEPS,
+            "characters": load_characters(),
+            "contact_email": contact.contact_email(),
+            "year": datetime.now().year,
+            "studio": "Bellunium",
+            "img": make_img_resolver(),
+        }
     )
 
 
-# Оставляем этот эндпоинт ТОЛЬКО для первоначальной загрузки истории при входе на сайт
+# Этот эндпоинт нужен только для первоначальной загрузки истории при входе на сайт.
+# cid посетителя нужен, чтобы пометить его собственные штрихи (их он может стирать).
 @app.get("/api/get_lines")
-async def get_lines():
-    conn = sqlite3.connect("drawings.db")
-    cursor = conn.cursor()
-    cursor.execute("SELECT prevX, prevY, currX, currY, color, size FROM lines")
-    rows = cursor.fetchall()
-    conn.close()
+async def get_lines(cid: str = ""):
+    me = cid if valid_cid(cid) else None
+    with closing(connect_db()) as conn:
+        rows = conn.execute(
+            "SELECT prevX, prevY, currX, currY, color, size, lid, cid, brush FROM lines"
+        ).fetchall()
 
-    lines = []
-    for r in rows:
-        # Индексы 0, 1, 2, 3, 4, 5 соответствуют порядку колонок в SELECT
-        lines.append({
-            "prevX": r[0],
-            "prevY": r[1],
-            "currX": r[2],
-            "currY": r[3],
-            "color": r[4],
-            "size": r[5]
-        })
+    lines = [
+        {"prevX": r[0], "prevY": r[1], "currX": r[2], "currY": r[3], "color": r[4], "size": r[5],
+         "lid": r[6] or "", "mine": bool(me) and r[7] == me, "brush": r[8] or "w"}
+        for r in rows
+    ]
     return JSONResponse(content={"lines": lines})
 
+
+# ---------------------------------------------------------------------
+# ФОРМА СВЯЗИ: письмо на почту художницы
+# ---------------------------------------------------------------------
+contact_limiter = contact.ContactLimiter()
+
+
+@app.post("/api/contact")
+async def contact_api(request: Request):
+    cfg = contact.smtp_config()
+    if cfg is None:
+        # Почта на сервере не настроена: страница сама предложит отправить письмо из почтовой программы
+        return JSONResponse({"error": "smtp_not_configured"}, status_code=503)
+    try:
+        data = await request.json()
+    except ValueError:
+        return JSONResponse({"error": "bad_request"}, status_code=400)
+    cleaned, error = contact.validate(data)
+    if error == "spam":
+        return JSONResponse({"ok": True})   # бота не расстраиваем, письмо просто не уходит
+    if error:
+        return JSONResponse({"error": error}, status_code=400)
+    ip = request.client.host if request.client else "unknown"
+    if not contact_limiter.allow(ip):
+        return JSONResponse({"error": "too_many"}, status_code=429)
+    try:
+        await run_in_threadpool(contact.send, cfg, cleaned)
+    except Exception as e:
+        print(f"[сайт] Не удалось отправить письмо: {e}")
+        return JSONResponse({"error": "send_failed"}, status_code=502)
+    return JSONResponse({"ok": True})
 
 
 # ---------------------------------------------------------------------
@@ -145,26 +191,68 @@ async def get_lines():
 # ---------------------------------------------------------------------
 @app.websocket("/ws/draw")
 async def websocket_endpoint(websocket: WebSocket):
+    # Личный id посетителя из браузера. Он нужен только серверу и другим не рассылается.
+    cid = websocket.query_params.get("cid", "")
+    if not valid_cid(cid):
+        cid = secrets.token_hex(8)  # без нормального id стирать свои штрихи после перезагрузки не получится
+
     await manager.connect(websocket)
+    limiter = RateLimiter()
     try:
         while True:
-            # Ждем мазок от JavaScript клиента
-            data = await websocket.receive_text()
-            line_data = json.loads(data)
+            raw = await websocket.receive_text()
 
-            # Сохраняем полученную линию в базу SQLite, чтобы она не пропала
-            conn = sqlite3.connect("drawings.db")
-            cursor = conn.cursor()
-            cursor.execute(
-                "INSERT INTO lines (prevX, prevY, currX, currY, color, size, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?)",
-                (line_data['prevX'], line_data['prevY'], line_data['currX'], line_data['currY'], line_data['color'],
-                 line_data['size'], time.time())
-            )
-            conn.commit()
-            conn.close()
+            # Слишком частые сообщения и мусор молча отбрасываем
+            if not limiter.allow():
+                continue
 
-            # Мгновенно пересылаем эту линию всем остальным юзерам на сайте
-            await manager.broadcast(data)
+            # Ластик: убрать свои отрезки и добавить их уцелевшие части
+            cut = parse_cut(raw)
+            if cut is not None:
+                remove, add = cut
+                owned = []
+                if remove:
+                    marks = ",".join("?" * len(remove))
+                    with closing(connect_db()) as conn:
+                        # Удаляем и рассылаем только то, что действительно принадлежит этому посетителю
+                        owned = [r[0] for r in conn.execute(
+                            f"SELECT lid FROM lines WHERE cid = ? AND lid IN ({marks})", [cid, *remove])]
+                        if owned:
+                            conn.execute(f"DELETE FROM lines WHERE cid = ? AND lid IN ({marks})", [cid, *remove])
+                            conn.commit()
+                # Новых кусочков не больше, чем уместно для убранных линий (защита от спама)
+                add = add[: ADD_PER_REMOVED * len(owned)]
+                if owned or add:
+                    with closing(connect_db()) as conn:
+                        for item in add:
+                            insert_line(conn, item, cid)
+                        conn.commit()
+                    await manager.broadcast(json.dumps({"cut": {"remove": owned, "add": add}}), exclude=websocket)
+                continue
+
+            # Стереть все свои рисунки
+            if is_clear(raw):
+                with closing(connect_db()) as conn:
+                    lids = [r[0] for r in conn.execute(
+                        "SELECT lid FROM lines WHERE cid = ? AND lid != ''", (cid,))]
+                    conn.execute("DELETE FROM lines WHERE cid = ?", (cid,))
+                    conn.commit()
+                for i in range(0, len(lids), 500):
+                    await manager.broadcast(
+                        json.dumps({"cut": {"remove": lids[i:i + 500], "add": []}}), exclude=websocket)
+                continue
+
+            line = parse_line(raw)
+            if line is None:
+                continue
+
+            # Сохраняем проверенную линию в SQLite, чтобы она не пропала
+            with closing(connect_db()) as conn:
+                insert_line(conn, line, cid)
+                conn.commit()
+
+            # Мгновенно пересылаем всем остальным (очищенные данные, без личного id)
+            await manager.broadcast(json.dumps(line), exclude=websocket)
 
     except WebSocketDisconnect:
         manager.disconnect(websocket)
