@@ -9,443 +9,24 @@
     <meta property="og:title" content="Анна-Анастасия Новик | Сказочные иллюстрации">
     <meta property="og:description" content="Живые, тёплые иллюстрации для детских книг и журналов. Портфолио и контакты.">
     <meta name="theme-color" content="#faf6ee">
+    <link rel="canonical" href="{{ canonical }}">
+    <meta property="og:url" content="{{ canonical }}">
+    <meta property="og:image" content="{{ og_image }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="ru_RU">
+    <meta property="og:site_name" content="Анна-Анастасия Новик">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="apple-touch-icon" href="/static/apple-touch-icon.png">
+    <script type="application/ld+json">{{ {"@context": "https://schema.org", "@type": "Person", "name": "Анна-Анастасия Новик", "jobTitle": "Иллюстратор детских книг и журналов", "url": canonical, "image": og_image, "email": contact_email, "sameAs": ["https://t.me/angry_miu", "https://instagram.com/angry_miu"]}|tojson }}</script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
 
-    <style>
-        html { overflow-x: clip; }
-        body {
-            background-image: url('{{ img("paper.jpg") }}');
-            background-color: #faf6ee;
-            background-repeat: repeat;
-            font-family: 'Inter', sans-serif;
-            color: #334155;
-            margin: 0; padding: 0;
-            min-height: 100vh;
-            scroll-behavior: smooth;
-            position: relative;
-            overflow-x: hidden;
-        }
-
-        body::before {
-            content: ''; position: absolute;
-            top: -10%; right: -5%; width: 850px; height: 850px;
-            background: radial-gradient(circle, rgba(13, 148, 136, 0.15) 0%, transparent 70%);
-            z-index: -1; pointer-events: none;
-        }
-
-                /* ХОЛСТ НА СВЕРХТОЧНОМ ЭКРАННОМ ОВЕРЛЕЕ СТУДИИ BELLUNIUM */
-        #drawingCanvas {
-            position: fixed !important; /* Фиксируем строго в окне браузера */
-            top: 0;
-            left: 0;
-            width: 100vw !important; /* Строго на всю ширину окна */
-            height: 100vh !important; /* Строго на всю высоту окна */
-            z-index: 1 !important; /* Уводим под буквы и фреймы картинок */
-            pointer-events: none; /* Клики пролетают сквозь холст на кнопки */
-        }
-
-        .intro-section, .magazine-section, .gallery-section, .contacts-section {
-            position: relative;
-            z-index: 5 !important;
-            background: transparent !important;
-        }
-
-
-
-
-        .intro-section {
-            display: flex; min-height: 100vh; align-items: center;
-            max-width: 1200px; margin: 0 auto; padding: 4rem 3rem;
-            box-sizing: border-box; gap: 5rem;
-        }
-
-                .intro-text {
-            flex: 1.2;
-            max-width: 550px;
-            position: relative;
-            -webkit-user-select: none;
-            user-select: none;
-        }
-
-        .intro-text h1 {
-            font-family: 'Playfair Display', serif; font-size: 4.2rem;
-            color: #0f172a; margin: 0 0 0.5rem 0; font-weight: 700; line-height: 1.15;
-            position: relative;
-        }
-
-        .intro-text h1::after {
-            content: '✨'; position: absolute; top: -20px; right: 40px;
-            font-size: 1.5rem; opacity: 0.8; animation: pulseStar 3s ease-in-out infinite;
-        }
-
-        @keyframes pulseStar {
-            0%, 100% { opacity: 0.4; transform: scale(0.9); }
-            50% { opacity: 1; transform: scale(1.1); }
-        }
-
-        .subtitle {
-            font-family: 'Caveat', cursive; color: #0d9488;
-            font-size: 2.4rem; margin-bottom: 2.5rem; font-weight: 700; letter-spacing: 0.03em;
-        }
-
-        .intro-text p { font-size: 1.15rem; line-height: 1.9; color: #475569; margin-bottom: 3.5rem; }
-        .intro-featured-art { flex: 1; display: flex; justify-content: center; align-items: center; min-width: 320px; }
-
-        .featured-art-frame {
-            position: relative; background: #ffffff; padding: 1.4rem;
-            box-shadow: 0 30px 60px -15px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(13, 148, 136, 0.05);
-            border-radius: 40px; max-width: 380px; width: 100%; cursor: zoom-in;
-            transition: transform 0.5s ease;
-        }
-
-        .featured-art-frame:hover { transform: scale(1.02) rotate(0.5deg); }
-        .featured-art-frame img { width: 100%; height: auto; display: block; border-radius: 24px; }
-
-        .rabbit-container-box {
-            position: absolute; z-index: 15; top: -65px !important; right: -70px !important;
-            bottom: auto !important; left: auto !important; width: 200px !important; pointer-events: none;
-            will-change: transform;
-        }
-
-        .floating-character {
-            width: 100% !important; height: auto; display: block;
-            filter: drop-shadow(0 12px 20px rgba(13, 148, 136, 0.15));
-            transform-origin: center bottom; animation: gentleWobble 5s ease-in-out infinite;
-        }
-
-        @keyframes gentleWobble {
-            0%, 100% { transform: rotate(-3deg) translateY(0); }
-            50% { transform: rotate(4deg) translateY(-6px); }
-        }
-
-        .scroll-btn {
-            display: inline-block; padding: 1.2rem 2.8rem;
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); color: #ffffff;
-            text-decoration: none; font-family: 'Playfair Display', serif; font-style: italic;
-            font-size: 1.2rem; font-weight: 600; border-radius: 40px;
-            box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.2); border: 1px solid rgba(13, 148, 136, 0.2);
-            transition: all 0.3s ease;
-        }
-
-        .scroll-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 30px -5px rgba(13, 148, 136, 0.25); border-color: #0d9488; }
-        .magazine-section { max-width: 1200px; margin: 0 auto; padding: 6rem 2rem 4rem 2rem; }
-        .magazine-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 3rem; }
-        .magazine-card { background: #ffffff; padding: 1rem; border-radius: 24px; box-shadow: 0 15px 35px rgba(15, 23, 42, 0.03); border: 1px solid rgba(214, 211, 209, 0.3); cursor: zoom-in; transition: transform 0.4s ease; }
-        .magazine-card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(13, 148, 136, 0.08); border-color: #0d9488; }
-        .magazine-img-holder { border-radius: 14px; overflow: hidden; background-color: #fafaf9; aspect-ratio: 4/3; }
-        .magazine-img-holder img { width: 100%; height: 100%; object-fit: cover; display: block; }
-        .magazine-card h4 { font-family: 'Playfair Display', serif; font-size: 1.15rem; color: #0f172a; text-align: center; margin: 1rem 0 0 0; min-height: 2.5rem; display: flex; align-items: center; justify-content: center; }
-
-        .gallery-section { max-width: 1100px; margin: 0 auto; padding: 4rem 2rem 6rem 2rem; border-top: 1px dashed rgba(13, 148, 136, 0.15); }
-        .section-title { text-align: center; font-family: 'Playfair Display', serif; font-size: 2.8rem; color: #0f172a; margin-bottom: 5rem; }
-        .book-container { background: #ffffff; padding: 2.5rem; border-radius: 32px; box-shadow: 0 30px 70px -20px rgba(15, 23, 42, 0.04); border: 1px solid rgba(214, 211, 209, 0.4); margin-bottom: 6rem; position: relative; }
-        .book-header { text-align: center; margin-bottom: 2rem; }
-        .book-header h3 { font-family: 'Playfair Display', serif; font-size: 2rem; color: #0f172a; margin: 0; }
-        .book-header p { font-family: 'Caveat', cursive; color: #0d9488; font-size: 1.5rem; margin: 0.3rem 0 0 0; }
-
-        .book-slider { position: relative; overflow: hidden; border-radius: 20px; background-color: #fafaf9; aspect-ratio: 16/10; width: 100%; }
-        .book-track { display: flex; width: 100%; height: 100%; transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
-        .book-page { min-width: 100%; width: 100%; height: 100%; flex-shrink: 0; cursor: zoom-in; }
-        .book-page img { width: 100%; height: 100%; object-fit: cover; display: block; }
-
-        .nav-btn { position: absolute; top: 55%; transform: translateY(-50%); background: #ffffff; color: #0f172a; width: 55px; height: 55px; border-radius: 50%; border: 1px solid rgba(214, 211, 209, 0.6); display: flex; align-items: center; justify-content: center; font-size: 1.6rem; cursor: pointer; user-select: none; box-shadow: 0 10px 20px rgba(15, 23, 42, 0.04); transition: all 0.3s ease; z-index: 20; }
-        .nav-btn:hover { background: #0f172a; color: #ffffff; transform: translateY(-50%) scale(1.05); }
-        .prev-btn { left: -25px; } .next-btn { right: -25px; }
-
-        .contacts-section { background: rgba(255, 255, 255, 0.6); border-top: 1px dashed rgba(13, 148, 136, 0.15); padding: 7rem 2rem; }
-        .contacts-container { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1.2fr; gap: 5rem; }
-        .contacts-info h2 { font-family: 'Playfair Display', serif; font-size: 2.6rem; color: #0f172a; margin: 0 0 1.5rem 0; }
-        .contacts-info p { font-size: 1.1rem; line-height: 1.8; color: #475569; margin-bottom: 3rem; }
-
-        .social-box { display: flex; flex-direction: column; gap: 1rem; }
-        .social-link { display: flex; align-items: center; gap: 1rem; padding: 1rem 1.5rem; background: #ffffff; border: 1px solid rgba(214, 211, 209, 0.5); border-radius: 16px; text-decoration: none; color: #334155; font-weight: 500; transition: all 0.3s ease; box-shadow: 0 4px 10px rgba(0,0,0,0.01); }
-        .social-link:hover { transform: translateX(5px); border-color: #0d9488; color: #0d9488; }
-
-        .contact-form { background: #ffffff; padding: 2.5rem; border-radius: 28px; box-shadow: 0 20px 50px -15px rgba(15, 23, 42, 0.04); border: 1px solid rgba(214, 211, 209, 0.4); }
-        .form-group { margin-bottom: 1.5rem; display: flex; flex-direction: column; gap: 0.5rem; }
-        .form-group label { font-size: 0.95rem; font-weight: 500; color: #0f172a; }
-        .form-group input, .form-group textarea { padding: 1rem; border-radius: 12px; border: 1px solid rgba(214, 211, 209, 0.6); background: #fafaf9; font-family: inherit; font-size: 1rem; transition: border-color 0.3s; }
-        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: #0d9488; background: #ffffff; }
-        .submit-btn { width: 100%; padding: 1.1rem; background: #0f172a; color: #ffffff; border: none; border-radius: 12px; font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.3rem; font-weight: 600; cursor: pointer; box-shadow: 0 8px 20px rgba(15, 23, 42, 0.1); transition: all 0.3s; }
-        .submit-btn:hover { background: #1e293b; transform: translateY(-2px); box-shadow: 0 12px 25px rgba(13, 148, 136, 0.2); }
-
-                /* ОКНО LIGHTBOX С ТРИУМФАЛЬНЫМ ГЛУБОКИМ ЗАТЕМНЕНИЕМ ФОНА */
-        .lightbox {
-            position: fixed !important;
-            top: 0 !important;
-            left: 0 !important;
-            width: 100vw !important;
-            height: 100vh !important;
-            background-color: rgba(15, 23, 42, 0.95) !important; /* Намертво прибиваем тёмный полумрак */
-            display: flex !important;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.4s ease;
-            z-index: 999999 !important; /* Поднимаем на самый высокий слой в космос поверх холста и форм */
-            padding: 2rem;
-            box-sizing: border-box;
-        }
-        .lightbox.active { opacity: 1 !important; pointer-events: auto !important; }
-        .lightbox-img { max-width: 90%; max-height: 85vh; border-radius: 12px; transform: scale(0.95); transition: transform 0.4s ease; z-index: 1000000 !important; }
-        .lightbox.active .lightbox-img { transform: scale(1); }
-        .close-btn { position: absolute; top: 1.5rem; right: 2rem; color: #f5f5f4; font-size: 3rem; cursor: pointer; z-index: 1000001 !important; }
-
-
-                /* КРАСИВАЯ МОБИЛЬНАЯ ВЕРСТКА С ДОРОЖКАМИ ДЛЯ РИСОВАНИЯ */
-        @media (max-width: 968px) {
-            /* Задаем боковые отступы-паддинги для всех секций на телефоне */
-            .intro-section, .magazine-section, .gallery-section, .contacts-section {
-                padding-left: 45px !important;
-                padding-right: 45px !important;
-                box-sizing: border-box;
-            }
-
-            .intro-section {
-                flex-direction: column;
-                text-align: center;
-                padding-top: 5rem;
-                gap: 3rem;
-            }
-            .intro-text { max-width: 100%; }
-            .intro-text h1 { font-size: 2.8rem; }
-            .subtitle { font-size: 1.8rem; margin-bottom: 1.5rem; }
-            .intro-text p { font-size: 1rem; line-height: 1.7; margin-bottom: 2rem; }
-
-            /* Ужимаем рамку фото, чтобы она не съедала поля */
-            .featured-art-frame { max-width: 280px; padding: 1rem; border-radius: 30px; }
-            .rabbit-container-box { width: 140px !important; top: -50px !important; right: -40px !important; }
-
-            .magazine-grid { grid-template-columns: 1fr; gap: 2rem; }
-            .book-container { padding: 1.5rem; border-radius: 24px; margin-bottom: 4rem; }
-            .book-header h3 { font-size: 1.6rem; }
-            .contacts-container { grid-template-columns: 1fr; gap: 3rem; padding: 0; }
-            .contact-form { padding: 1.5rem; border-radius: 20px; }
-
-            .nav-btn { width: 40px; height: 40px; font-size: 1.1rem; }
-            .prev-btn { left: -15px; } .next-btn { right: -15px; }
-        }
-
-        @media (max-width: 550px) { .magazine-grid { grid-template-columns: 1fr; } }
-                        /* ПАНЕЛЬ КИСТИ */
-        .tools {
-            position: fixed; left: 16px; bottom: 16px; z-index: 100;
-            display: flex; flex-direction: column; align-items: flex-start; gap: 10px;
-        }
-        .tools-toggle {
-            width: 52px; height: 52px; border-radius: 50%; border: 1px solid rgba(13, 148, 136, 0.2);
-            background: #ffffff; font-size: 1.5rem; cursor: pointer;
-            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12); transition: transform 0.2s;
-        }
-        .tools-toggle:hover { transform: scale(1.08) rotate(-6deg); }
-        .tools-panel {
-            width: 224px; background: #ffffff; border-radius: 22px; padding: 14px;
-            border: 1px solid rgba(13, 148, 136, 0.15); box-shadow: 0 16px 40px rgba(15, 23, 42, 0.12);
-            display: flex; flex-direction: column; gap: 12px;
-            transform-origin: left bottom; transition: opacity 0.2s, transform 0.2s;
-        }
-        .tools.collapsed .tools-panel { opacity: 0; transform: scale(0.9); pointer-events: none; position: absolute; }
-        .tools-title { font-family: 'Caveat', cursive; font-size: 1.35rem; color: #0f172a; display: flex; align-items: center; gap: 8px; }
-        .live-dot { width: 9px; height: 9px; border-radius: 50%; background: #cbd5e1; transition: background 0.3s; }
-        .live-dot.on { background: #22c55e; box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.18); }
-        .swatches { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-        .swatch { aspect-ratio: 1; border-radius: 50%; border: 2px solid #ffffff; box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.12); cursor: pointer; padding: 0; transition: transform 0.15s; }
-        .swatch:hover { transform: scale(1.12); }
-        .swatch.active { box-shadow: 0 0 0 2px #0f172a; transform: scale(1.1); }
-        .sizes { display: flex; gap: 8px; }
-        .size-btn { flex: 1; height: 38px; border-radius: 12px; border: 1px solid rgba(214, 211, 209, 0.7); background: #fafaf9; cursor: pointer; display: grid; place-items: center; padding: 0; }
-        .size-btn i { display: block; border-radius: 50%; background: #0f172a; }
-        .size-btn.active { border-color: #0d9488; background: #e6f6f4; }
-        .tool-row { display: flex; gap: 8px; }
-        .tool-btn { flex: 1; padding: 9px 4px; border-radius: 12px; border: 1px solid rgba(214, 211, 209, 0.7); background: #fafaf9; font-family: inherit; font-size: 0.78rem; white-space: nowrap; color: #475569; cursor: pointer; transition: all 0.2s; }
-        .tool-btn.on { background: #0f172a; color: #ffffff; border-color: #0f172a; }
-        body.erasing, body.erasing * { cursor: var(--eraser-cursor, cell); }
-
-        /* ИСКОРКИ КУРСОРА */
-        .magic-sparkle {
-            position: fixed; pointer-events: none; z-index: 9999; border-radius: 50%;
-            animation: fadeAndFadeOut 1s ease-out forwards;
-        }
-        @keyframes fadeAndFadeOut {
-            0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-            100% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
-        }
-
-        /* Запрещаем браузеру выделять и перетаскивать картинки и текст (мешает рисовать) */
-        img { -webkit-user-select: none; -webkit-user-drag: none; user-select: none; }
-        *, h1, h2, h3, h4, p, label, span, div, section {
-            -webkit-user-select: none !important; -moz-user-select: none !important;
-            -ms-user-select: none !important; user-select: none !important;
-        }
-        /* Ввод текста разрешён только в полях формы */
-        input, textarea { -webkit-user-select: text !important; user-select: text !important; }
-
-        /* Если картинка не загрузилась, показываем мягкую заглушку вместо пустоты */
-        .img-missing { background: linear-gradient(135deg, #e6f4f1, #fdf3e3) !important; position: relative; }
-        .img-missing::after { content: '🖼️'; position: absolute; inset: 0; display: grid; place-items: center; font-size: 2.2rem; opacity: 0.55; }
-        .img-missing img { visibility: hidden; }
-canvas#drawingCanvas { opacity: 0.8; }
-
-        /* Мягкая «бумажная» подложка под текстом: рисунки под ней приглушаются, и текст читается */
-        .intro-text, .section-title, .contacts-info { position: relative; isolation: isolate; }
-        .section-title { width: fit-content; margin-left: auto; margin-right: auto; max-width: 100%; }
-        .intro-text::before, .section-title::before, .contacts-info::before {
-            content: ''; position: absolute; z-index: -1; inset: -0.9rem -1.4rem; border-radius: 36px;
-            background: rgba(250, 246, 238, 0.86);
-            -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px);
-            box-shadow: 0 0 26px 16px rgba(250, 246, 238, 0.86);
-            pointer-events: none;
-        }
-
-
-        /* Обо мне, услуги, этапы работы */
-        .about-section, .services-section { position: relative; z-index: 5; max-width: 1100px; margin: 0 auto; padding: 5rem 2rem; box-sizing: border-box; }
-        .about-section { display: flex; align-items: center; gap: 4rem; }
-        .about-photo { flex: 0 0 340px; max-width: 340px; border-radius: 28px; overflow: hidden; box-shadow: 0 25px 50px rgba(15, 23, 42, 0.12); border: 8px solid #fff; transform: rotate(-2deg); cursor: zoom-in; }
-        .about-photo img { width: 100%; display: block; aspect-ratio: 1/1; object-fit: cover; }
-        .about-text { position: relative; isolation: isolate; flex: 1; }
-        .about-text h2 { font-family: 'Playfair Display', serif; font-size: 2.4rem; color: #0f172a; margin: 0 0 1.2rem 0; }
-        .about-text p { color: #475569; line-height: 1.75; font-size: 1.05rem; margin: 0 0 1rem 0; }
-        .about-tags { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1.4rem; }
-        .about-tags span { background: #fff; border: 1px solid rgba(13, 148, 136, 0.25); color: #0f766e; border-radius: 999px; padding: 0.4rem 1rem; font-size: 0.9rem; font-weight: 500; }
-        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 1.4rem; }
-        @media (min-width: 1000px) { .services-grid { grid-template-columns: repeat(5, 1fr); } }
-        .service-card { background: #fff; border-radius: 22px; padding: 1.6rem 1.3rem; text-align: center; border: 1px solid rgba(214, 211, 209, 0.4); box-shadow: 0 12px 28px rgba(15, 23, 42, 0.04); }
-        .service-card .s-icon { font-size: 2rem; display: block; margin-bottom: 0.6rem; }
-        .service-card h3 { font-family: 'Playfair Display', serif; font-size: 1.15rem; margin: 0 0 0.5rem 0; color: #0f172a; }
-        .service-card p { margin: 0; color: #64748b; font-size: 0.93rem; line-height: 1.55; }
-        .steps { list-style: none; margin: 4rem 0 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1.4rem; counter-reset: step; }
-        .steps li { position: relative; background: rgba(255, 255, 255, 0.85); border-radius: 22px; padding: 1.6rem 1.3rem 1.3rem 1.3rem; border: 1px dashed rgba(13, 148, 136, 0.35); counter-increment: step; }
-        .steps li::before { content: counter(step); position: absolute; top: -16px; left: 18px; width: 34px; height: 34px; border-radius: 50%; background: #0d9488; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 600; font-family: 'Playfair Display', serif; }
-        .steps b { display: block; margin-bottom: 0.35rem; color: #0f172a; font-size: 1.05rem; }
-        .steps span { color: #64748b; font-size: 0.93rem; line-height: 1.55; }
-        .price-note { text-align: center; color: #475569; margin: 2.5rem auto 0 auto; max-width: 560px; line-height: 1.6; }
-        .price-note a { color: #0d9488; font-weight: 600; text-decoration: none; border-bottom: 1px solid currentColor; }
-        .magazine-card.tall .magazine-img-holder { aspect-ratio: 4/5; }
-        .magazine-card.tall .magazine-img-holder img { object-position: top center; }
-        .about-text::before { content: ''; position: absolute; z-index: -1; inset: -0.9rem -1.4rem; border-radius: 36px; background: rgba(250, 246, 238, 0.86); -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px); box-shadow: 0 0 26px 16px rgba(250, 246, 238, 0.86); pointer-events: none; }
-        @media (max-width: 968px) {
-            .about-section, .services-section { padding: 3.5rem 45px; }
-            .about-section { flex-direction: column; text-align: center; gap: 2.5rem; }
-            .about-photo { flex-basis: auto; width: min(300px, 100%); }
-            .about-tags { justify-content: center; }
-            .about-text h2 { font-size: 2rem; }
-        }
-
-        /* Форма и нижний блок */
-        .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
-        .form-status { margin: 1rem 0 0 0; font-size: 0.9rem; color: #64748b; text-align: center; line-height: 1.45; }
-        .form-status.ok { color: #0d9488; font-weight: 500; }
-        .form-status.err { color: #dc2626; }
-        .submit-btn:disabled { opacity: 0.6; cursor: wait; transform: none; }
-
-        .site-footer { position: relative; z-index: 5; background: rgba(255, 255, 255, 0.72); border-top: 1px dashed rgba(13, 148, 136, 0.25); padding: 4.5rem 2rem 6.5rem 2rem; }
-        .footer-grid { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 3rem; }
-        .footer-brand h3 { font-family: 'Playfair Display', serif; font-size: 1.7rem; margin: 0 0 0.4rem 0; color: #0f172a; }
-        .footer-brand p { font-family: 'Caveat', cursive; color: #0d9488; font-size: 1.55rem; margin: 0; }
-        .footer-col h4 { font-family: 'Playfair Display', serif; font-size: 1.05rem; margin: 0 0 0.9rem 0; color: #0f172a; }
-        .footer-col a { display: block; color: #475569; text-decoration: none; padding: 0.3rem 0; transition: color 0.2s, transform 0.2s; }
-        .footer-col a:hover { color: #0d9488; transform: translateX(4px); }
-        .footer-bottom { max-width: 1100px; margin: 3rem auto 0 auto; padding-top: 1.5rem; border-top: 1px solid rgba(214, 211, 209, 0.6); display: flex; justify-content: space-between; gap: 0.8rem 2rem; flex-wrap: wrap; font-size: 0.9rem; color: #64748b; }
-        .footer-credit strong { color: #0d9488; font-weight: 600; letter-spacing: 0.02em; }
-        /* В нижнем блоке и контактах текст можно выделять и копировать */
-        .site-footer *, .contacts-info .social-link * { -webkit-user-select: text !important; user-select: text !important; }
-        @media (max-width: 968px) {
-            .site-footer { padding: 3rem 45px 7rem 45px; }
-            .footer-grid { grid-template-columns: 1fr; gap: 2rem; text-align: center; }
-            .footer-col a:hover { transform: none; }
-            .footer-bottom { justify-content: center; text-align: center; }
-        }
-
-        /* Шлейф за курсором рисуется на отдельном холсте */
-        #trailCanvas { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 9998; pointer-events: none; }
-
-        /* МИНИ-ИГРА: НАЙДИ ГЕРОЕВ СКАЗОК */
-        .hidden-char {
-            --w: var(--size);
-            position: absolute; z-index: 7; width: var(--w); height: var(--w);
-            left: min(var(--left), calc(100% - var(--w)));
-            padding: 0; border: 0; background: none; cursor: pointer;
-            transform: rotate(var(--rot)); opacity: 0.92;
-            filter: drop-shadow(0 6px 10px rgba(13, 148, 136, 0.28));
-            animation: charPeek 4.5s ease-in-out infinite;
-            transition: transform 0.25s, opacity 0.3s;
-        }
-        .hidden-char:hover, .hidden-char:focus-visible { transform: rotate(var(--rot)) scale(1.2); opacity: 1; outline: none; }
-        .hidden-char img { width: 100%; height: 100%; object-fit: contain; display: block; pointer-events: none; }
-        .hidden-char.gone { display: none; }
-        .char-emoji { display: grid; place-items: center; width: 100%; height: 100%; font-size: calc(var(--size, 64px) * 0.78); line-height: 1; }
-        @keyframes charPeek { 0%, 100% { translate: 0 0; } 50% { translate: 0 -6px; } }
-        .flying-char { position: fixed; z-index: 1000002; pointer-events: none; }
-        .flying-char img { width: 100%; height: 100%; object-fit: contain; }
-
-        .collection-btn {
-            position: fixed; right: 16px; bottom: 16px; z-index: 100;
-            display: flex; align-items: center; gap: 8px; padding: 0 18px; height: 52px;
-            background: #0f172a; color: #ffffff; border: 1px solid rgba(13, 148, 136, 0.3); border-radius: 26px;
-            font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.05rem; cursor: pointer;
-            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.22); transition: transform 0.2s;
-        }
-        .collection-btn:hover { transform: translateY(-2px); }
-        .collection-btn.pulse { animation: collPulse 0.6s ease; }
-        @keyframes collPulse { 0% { transform: scale(1); } 40% { transform: scale(1.18); } 100% { transform: scale(1); } }
-        .coll-hint {
-            position: fixed; right: 16px; bottom: 78px; z-index: 100; max-width: 230px;
-            background: #ffffff; color: #334155; padding: 12px 16px; border-radius: 16px; font-size: 0.92rem; line-height: 1.4;
-            border: 1px solid rgba(13, 148, 136, 0.2); box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12);
-            opacity: 0; transform: translateY(8px); pointer-events: none; transition: all 0.4s;
-        }
-        .coll-hint.show { opacity: 1; transform: none; pointer-events: auto; cursor: pointer; }
-        .toast {
-            position: fixed; left: 50%; bottom: 84px; z-index: 1000003; transform: translate(-50%, 16px);
-            background: #0f172a; color: #ffffff; padding: 12px 22px; border-radius: 24px; font-size: 1rem;
-            opacity: 0; pointer-events: none; transition: all 0.35s; text-align: center; max-width: 86vw;
-            box-shadow: 0 14px 34px rgba(15, 23, 42, 0.3);
-        }
-        .toast.show { opacity: 1; transform: translate(-50%, 0); }
-
-        .coll-overlay {
-            position: fixed; inset: 0; z-index: 1000000; background: rgba(15, 23, 42, 0.78);
-            display: flex; align-items: center; justify-content: center; padding: 1rem;
-            opacity: 0; pointer-events: none; transition: opacity 0.3s;
-        }
-        .coll-overlay.active { opacity: 1; pointer-events: auto; }
-        .coll-card {
-            background: #faf6ee; border-radius: 28px; width: 100%; max-width: 760px; max-height: 90vh; overflow-y: auto;
-            padding: 2rem; box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35); position: relative;
-        }
-        .coll-close { position: absolute; top: 12px; right: 18px; font-size: 2rem; color: #64748b; cursor: pointer; background: none; border: 0; line-height: 1; }
-        .coll-card h3 { font-family: 'Playfair Display', serif; font-size: 1.9rem; margin: 0 0 0.3rem 0; color: #0f172a; text-align: center; }
-        .coll-sub { font-family: 'Caveat', cursive; font-size: 1.5rem; color: #0d9488; text-align: center; margin: 0 0 1.4rem 0; }
-        .coll-progress { height: 8px; border-radius: 4px; background: #e2e8f0; overflow: hidden; margin: 0 auto 1.6rem auto; max-width: 320px; }
-        .coll-progress i { display: block; height: 100%; background: linear-gradient(90deg, #0d9488, #2dd4bf); transition: width 0.6s; }
-        .coll-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; }
-        .coll-item { background: #ffffff; border-radius: 20px; padding: 14px 10px; text-align: center; border: 1px solid rgba(214, 211, 209, 0.5); }
-        .coll-art { width: 84px; height: 84px; margin: 0 auto 8px auto; display: grid; place-items: center; }
-        .coll-art img { width: 100%; height: 100%; object-fit: contain; }
-        .coll-art .char-emoji { font-size: 3.4rem; }
-        .coll-item.locked .coll-art { filter: grayscale(1) brightness(0.3); opacity: 0.35; }
-        .coll-item h4 { font-family: 'Playfair Display', serif; font-size: 1.05rem; margin: 0; color: #0f172a; }
-        .coll-item p { font-size: 0.82rem; color: #64748b; margin: 4px 0 0 0; line-height: 1.35; }
-        .coll-done { margin-top: 1.6rem; text-align: center; background: #e6f6f4; border-radius: 20px; padding: 1.2rem; color: #0f172a; }
-        .coll-done a { display: inline-block; margin-top: 0.8rem; padding: 0.8rem 1.6rem; background: #0f172a; color: #ffffff; text-decoration: none; border-radius: 30px; font-family: 'Playfair Display', serif; font-style: italic; }
-        .coll-reset { display: block; margin: 1.4rem auto 0 auto; background: none; border: 0; color: #94a3b8; font-size: 0.85rem; cursor: pointer; text-decoration: underline; }
-
-        @media (max-width: 968px) {
-            .hidden-char { --w: calc(var(--size) * 0.8); }
-            .tools-panel { width: 190px; }
-            .collection-btn { height: 46px; font-size: 0.95rem; padding: 0 14px; }
-            .tools-toggle { width: 46px; height: 46px; }
-            .coll-card { padding: 1.4rem; }
-            .coll-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-            .coll-art { width: 68px; height: 68px; }
-            .coll-art .char-emoji { font-size: 2.6rem; }
-        }
-    </style>
+    <link rel="stylesheet" href="/static/css/main.css?v={{ ver }}">
     <script>
         // Должно быть определено до загрузки картинок: onerror может сработать раньше основного скрипта
         window.imgFallback = function (img) { if (img.parentElement) img.parentElement.classList.add('img-missing'); };
@@ -458,13 +39,23 @@ canvas#drawingCanvas { opacity: 0.8; }
     </script>
 </head>
 <body>
-    {% macro hidden_char(c, img) %}
-    <button type="button" class="hidden-char" data-id="{{ c.id }}" data-name="{{ c.name }}" data-book="{{ c.book }}" data-emoji="{{ c.emoji }}" data-img="{{ img(c.image) }}" data-hint="{{ c.hint }}" style="--left: {{ c.left }}%; top: {{ c.top }}%; --size: {{ c.size }}px; --rot: {{ c.rot }}deg;" aria-label="Найти героя сказки">
-        <img src="{{ img(c.image) }}" alt="" data-emoji="{{ c.emoji }}" onerror="charFallback(this)">
-    </button>
-    {% endmacro %}
     <canvas id="drawingCanvas"></canvas>
     <canvas id="trailCanvas" aria-hidden="true"></canvas>
+
+    <header class="site-nav">
+        <a class="brand" href="#">Анна-Анастасия Новик</a>
+        <nav aria-label="Разделы сайта">
+            <ul>
+                <li><a href="#about">Обо мне</a></li>
+                <li><a href="#portfolio">Работы</a></li>
+                <li><a href="#services">Что рисую</a></li>
+                {% if prices %}<li><a href="#prices">Стоимость</a></li>{% endif %}
+                <li><a href="#books">Книги</a></li>
+                <li><a href="#contacts">Контакты</a></li>
+            </ul>
+        </nav>
+        <a class="cta" href="#contacts">Заказать</a>
+    </header>
 
     <!-- Панель кисти -->
     <div class="tools" id="tools">
@@ -485,7 +76,10 @@ canvas#drawingCanvas { opacity: 0.8; }
                 <button type="button" class="tool-btn on" id="btnOthers">👁️ Чужие</button>
             </div>
         </div>
-        <button type="button" class="tools-toggle" id="toolsToggle" aria-label="Кисть и цвета">🎨</button>
+        <div class="tools-toggle-row">
+            <button type="button" class="tools-toggle" id="toolsToggle" aria-label="Кисть и цвета" aria-expanded="false">🎨</button>
+            <span class="tools-label" aria-hidden="true">Рисуем вместе</span>
+        </div>
     </div>
 
     <section class="intro-section">
@@ -499,20 +93,22 @@ canvas#drawingCanvas { opacity: 0.8; }
         </div>
 
         <div class="intro-featured-art">
-            <div class="featured-art-frame" onclick="openLightbox('{{ img('photo.jpg') }}')">
-                <img src="{{ img('photo.jpg') }}" alt="Анна-Анастасия Новик" onerror="imgFallback(this)">
-                <div id="rabbit-parallax" class="rabbit-container-box">
-                    <img src="{{ img('character1.png') }}" class="floating-character" alt="Сказочный персонаж" onerror="this.style.display='none'">
+            <div class="featured-art-frame card-frame" onclick="openLightbox('{{ img('vizitka.jpg') }}')">
+                <div class="card-art">
+                    <img src="{{ img.m('vizitka.jpg') }}" {{ img.attrs('vizitka.jpg') }} fetchpriority="high" alt="Визитка: Новик Анна-Анастасия, иллюстратор книжек, календарей, открыток" onerror="imgFallback(this)">
+                    <div id="rabbit-parallax" class="fairy-box" style="left: 64.234%; top: 7.837%; width: 26.171%;">
+                        <img src="{{ img.m('fairy.png') }}" {{ img.attrs('fairy.png') }} class="fairy-float" alt="Фея" onerror="this.style.display='none'">
+                    </div>
                 </div>
             </div>
         </div>
-        {% for c in characters if c.section == 'intro' %}{{ hidden_char(c, img) }}{% endfor %}
+        <div class="char-layer" data-section="intro"></div>
     </section>
 
     <!-- БЛОК «ОБО МНЕ» -->
     <section id="about" class="about-section">
         <div class="about-photo" onclick="openLightbox('{{ img('anna.jpg') }}')">
-            <img src="{{ img('anna.jpg') }}" alt="Анна-Анастасия Новик с книгой своих иллюстраций" loading="lazy" onerror="imgFallback(this)">
+            <img src="{{ img.m('anna.jpg') }}" {{ img.attrs('anna.jpg') }} alt="Анна-Анастасия Новик с книгой своих иллюстраций" loading="lazy" onerror="imgFallback(this)">
         </div>
         <div class="about-text">
             <h2>Обо мне</h2>
@@ -520,6 +116,7 @@ canvas#drawingCanvas { opacity: 0.8; }
             <p>Мои рисунки выходили в журнале «Шапокляк», в книгах, на открытках, пазлах, календарях и упаковке. Люблю мягкие цвета, живые детали и характер в каждом персонаже.</p>
             <div class="about-tags"><span>Книги</span><span>Журналы</span><span>Игры и головоломки</span><span>Мерч и упаковка</span></div>
         </div>
+        <div class="char-layer" data-section="about"></div>
     </section>
 
     <!-- БЛОК ПОРТФОЛИО -->
@@ -530,13 +127,13 @@ canvas#drawingCanvas { opacity: 0.8; }
             {% for item in portfolio %}
             <div class="magazine-card{% if item.tall %} tall{% endif %}" onclick="openLightbox('{{ img(item.image) }}')">
                 <div class="magazine-img-holder">
-                    <img src="{{ img(item.thumb or item.image) }}" alt="{{ item.title }}" loading="lazy" onerror="imgFallback(this)">
+                    <img src="{{ img.m(item.image) }}" {{ img.attrs(item.image) }} alt="{{ item.title }}" loading="lazy" onerror="imgFallback(this)">
                 </div>
                 <h4>{{ item.title }}</h4>
             </div>
             {% endfor %}
         </div>
-        {% for c in characters if c.section == 'portfolio' %}{{ hidden_char(c, img) }}{% endfor %}
+        <div class="char-layer" data-section="portfolio"></div>
     </section>
     <!-- БЛОК «ЧТО Я РИСУЮ» И ЭТАПЫ -->
     <section id="services" class="services-section">
@@ -550,34 +147,75 @@ canvas#drawingCanvas { opacity: 0.8; }
             {% for st in steps %}<li><b>{{ st.title }}</b><span>{{ st.text }}</span></li>{% endfor %}
         </ol>
         <p class="price-note">Стоимость зависит от объёма и сроков. <a href="#contacts">Опишите задачу в форме</a>, и я отвечу с расчётом.</p>
+        <div class="char-layer" data-section="services"></div>
     </section>
+
+    {% if prices %}
+    <!-- СТОИМОСТЬ РАБОТ (показывается, когда заполнен PRICES в site_data.py) -->
+    <section id="prices" class="prices-section">
+        <h2 class="section-title">Стоимость работ</h2>
+        <div class="prices-grid">
+            {% for p in prices %}
+            <div class="price-card"><h3>{{ p.title }}</h3><div class="price-value">{{ p.price }}</div>{% if p.note %}<p>{{ p.note }}</p>{% endif %}</div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+    {% if clients %}
+    <!-- С КЕМ РАБОТАЛА (показывается, когда заполнен CLIENTS в site_data.py) -->
+    <section id="clients" class="clients-section">
+        <h2 class="section-title">Со мной работают</h2>
+        <div class="clients-grid">
+            {% for c in clients %}
+            <figure class="client-card"><blockquote>{{ c.text }}</blockquote><figcaption>{{ c.name }}</figcaption></figure>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
 
     <!-- БЛОК ИНТЕРАКТИВНЫХ КНИГ -->
     <section class="gallery-section" id="books">
         <h2 class="section-title">Интерактивные книжные проекты</h2>
 
         {% for book in books %}
-        <div class="book-container" id="book-{{ loop.index0 }}">
+        {% set bi = loop.index0 %}
+        {% set n = book.pages|length %}
+        <div class="book-container flipbook-wrap" id="book-{{ bi }}" data-spreads="{{ n }}" data-hue="{{ bi % 3 }}">
             <div class="book-header">
                 <h3>{{ book.title }}</h3>
                 <p>{{ book.subtitle }}</p>
             </div>
 
-            <div class="book-slider">
-                <div class="book-track">
-                    {% for page in book.pages %}
-                    <div class="book-page" onclick="openLightbox('{{ img(page) }}')">
-                        <img src="{{ img(page) }}" alt="{{ book.title }}, страница {{ loop.index }}" loading="lazy" onerror="imgFallback(this)">
-                    </div>
-                    {% endfor %}
+            <div class="flip-stage" tabindex="0" aria-label="Книга «{{ book.title }}»: нажмите или потяните страницу, чтобы листать">
+                <div class="flip-book is-closed" data-t="0">
+                    <div class="flip-glow"></div>
+                    <div class="pg pg-left empty"></div>
+                    <div class="pg pg-right empty"></div>
+                    <div class="fb-gutter"></div>
+                    <div class="cast cast-l"></div>
+                    <div class="cast cast-r"></div>
+                    <div class="fb-leaves"></div>
+                </div>
+                <div class="fb-src" hidden>
+                    {% for pg in book.pages %}<i data-u="{{ img.m(pg) }}" data-z="{{ img(pg) }}"></i>{% endfor %}
+                    <template class="tpl-cover"><div class="cover-frame"><span class="cover-orn">✦ ✧ ✦</span><div class="cover-art" style="background-image:url('{{ img.m(book.cover or book.pages[0]) }}')"></div><h4 class="cover-title">{{ book.title }}</h4><span class="cover-sub">{{ book.subtitle }}</span><span class="cover-open">Нажми, чтобы открыть</span></div></template>
+                    <template class="tpl-back"><div class="cover-frame"><span class="cover-orn">✦ ✧ ✦</span><h4 class="cover-title">Конец сказки</h4><span class="cover-sub">Нажми, чтобы начать сначала</span></div></template>
                 </div>
             </div>
 
-            <div class="nav-btn prev-btn" onclick="slideBook({{ loop.index0 }}, -1)">‹</div>
-            <div class="nav-btn next-btn" onclick="slideBook({{ loop.index0 }}, 1)">›</div>
+            <div class="flip-bar">
+                <button type="button" class="flip-zoom" data-act="zoom" aria-label="Увеличить разворот">🔍 Увеличить</button>
+                <div class="flip-dots" role="tablist">
+                    {% for k in range(n) %}<button type="button" class="flip-dot" data-spread="{{ k }}" aria-label="Разворот {{ k + 1 }}"></button>{% endfor %}
+                </div>
+                <span class="flip-count">Обложка</span>
+            </div>
+
+            <div class="nav-btn prev-btn" data-act="prev" role="button" aria-label="Назад">‹</div>
+            <div class="nav-btn next-btn" data-act="next" role="button" aria-label="Вперёд">›</div>
         </div>
         {% endfor %}
-        {% for c in characters if c.section == 'gallery' %}{{ hidden_char(c, img) }}{% endfor %}
+        <div class="char-layer" data-section="gallery"></div>
     </section>
 
     <!-- БЛОК КОНТАКТОВ -->
@@ -619,7 +257,7 @@ canvas#drawingCanvas { opacity: 0.8; }
                 <p class="form-status" id="formStatus" role="status" aria-live="polite">{% if contact_email %}Письмо придёт прямо на почту Анны-Анастасии.{% else %}Откроется Telegram с готовым сообщением, останется нажать «Отправить».{% endif %}</p>
             </form>
         </div>
-        {% for c in characters if c.section == 'contacts' %}{{ hidden_char(c, img) }}{% endfor %}
+        <div class="char-layer" data-section="contacts"></div>
     </section>
 
     <!-- НИЖНИЙ БЛОК САЙТА -->
@@ -650,13 +288,24 @@ canvas#drawingCanvas { opacity: 0.8; }
         </div>
     </footer>
 
+    <!-- Просмотр героя или стикера -->
+    <div class="sticker-view" id="stickerView" hidden role="dialog" aria-modal="true" aria-label="Стикер">
+        <div class="sticker-view-card">
+            <button type="button" class="coll-close" id="stickerViewClose" aria-label="Закрыть">&times;</button>
+            <div class="sticker-big" id="stickerBig"></div>
+            <h3 id="stickerName"></h3>
+            <p class="sticker-book" id="stickerBook"></p>
+            <p class="sticker-about" id="stickerAbout" hidden></p>
+        </div>
+    </div>
+
     <!-- Окно Lightbox -->
     <div id="lightboxOverlay" class="lightbox" onclick="closeLightbox()">
         <span class="close-btn">&times;</span>
         <img id="lightboxImage" class="lightbox-img" src="" alt="Просмотр">
     </div>
     <!-- МИНИ-ИГРА: коллекция героев -->
-    <div class="coll-hint" id="collHint">Здесь прячутся герои сказок. Найди их всех! ✨</div>
+    <div class="coll-hint" id="collHint">На сайте спрятаны стикеры с героями сказок — по пять. Найди всех пятерых, и завтра появятся новые! ✨</div>
     <button type="button" class="collection-btn" id="collectionBtn" aria-label="Открыть коллекцию героев">
         <span>📖</span><span id="collCounter">0/0</span>
     </button>
@@ -666,8 +315,9 @@ canvas#drawingCanvas { opacity: 0.8; }
             <button type="button" class="coll-close" id="collClose" aria-label="Закрыть">&times;</button>
             <h3>Книга героев</h3>
             <p class="coll-sub" id="collSub"></p>
+            <p class="coll-next" id="collNext"></p>
             <div class="coll-progress"><i id="collBar" style="width:0%"></i></div>
-            <div class="coll-grid" id="collGrid"></div>
+            <div class="sticker-grid" id="collGrid"></div>
             <div class="coll-done" id="collDone" hidden>
                 <strong>Вы нашли всех героев! 🎉</strong><br>
                 Расскажите об этом Анне-Анастасии, ей будет приятно.<br>
@@ -677,755 +327,7 @@ canvas#drawingCanvas { opacity: 0.8; }
         </div>
     </div>
 
-    <script>
-    (function () {
-        'use strict';
-
-        function storeGet(key) { try { return localStorage.getItem(key); } catch (e) { return null; } }
-        function storeSet(key, val) { try { localStorage.setItem(key, val); } catch (e) { /* без хранилища тоже работает */ } }
-        function randomId(len) {
-            const bytes = new Uint8Array(len);
-            (window.crypto || window.msCrypto).getRandomValues(bytes);
-            return Array.from(bytes, (b) => (b % 36).toString(36)).join('');
-        }
-        // Личный id посетителя: по нему сервер понимает, какие рисунки можно стирать
-        let CID = storeGet('fairyCid');
-        if (!CID || !/^[a-z0-9]{8,40}$/.test(CID)) { CID = randomId(16); storeSet('fairyCid', CID); }
-
-        // =====================================================================
-        // 1. ОБЩИЙ ХОЛСТ
-        // =====================================================================
-        const canvas = document.getElementById('drawingCanvas');
-        const ctx = canvas.getContext('2d');
-        const COLORS = ['#0d9488', '#2dd4bf', '#f59e0b', '#ec4899', '#8b5cf6', '#3b82f6', '#ef4444', '#84cc16'];
-        const SIZES = [4, 8, 14];
-        const MAX_LINES = 20000;
-
-        const state = {
-            lines: [],          // все мазки (координаты: x экрана, y страницы)
-            showOthers: true,
-            color: COLORS[0],
-            size: SIZES[1],
-            canDraw: window.matchMedia('(pointer: fine)').matches, // на телефоне по умолчанию выключено, чтобы не мешать скроллу
-            drawing: false,
-            tool: 'brush',      // 'brush' или 'eraser'
-            brush: 'w',         // 'w' акварель, 'o' масло
-            lx: 0, ly: 0,
-            raf: 0
-        };
-
-        function resizeCanvas() {
-            const r = Math.min(window.devicePixelRatio || 1, 2);
-            canvas.width = Math.round(window.innerWidth * r);
-            canvas.height = Math.round(window.innerHeight * r);
-            ctx.setTransform(r, 0, 0, r, 0, 0);
-            redraw();
-        }
-
-        // ---------- Кисти: акварель и масло ----------
-        // Мазок рисуется целиком из отрезков, соединённых концами. Так нет «бусин» на стыках,
-        // а фактура одинакова у всех посетителей (случайность берётся не из Math.random,
-        // а из координат начала мазка).
-        const rnd = (a, b) => { const h = Math.sin(a * 127.1 + b * 311.7) * 43758.5453; return h - Math.floor(h); };
-
-        function parseColor(c) {
-            let m = /^#([0-9a-f]{6})$/i.exec(c);
-            if (m) { const n = parseInt(m[1], 16); return [n >> 16, (n >> 8) & 255, n & 255]; }
-            m = /^#([0-9a-f])([0-9a-f])([0-9a-f])$/i.exec(c);
-            if (m) return [parseInt(m[1] + m[1], 16), parseInt(m[2] + m[2], 16), parseInt(m[3] + m[3], 16)];
-            m = /^rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/.exec(c);
-            if (m) return [Math.min(255, +m[1]), Math.min(255, +m[2]), Math.min(255, +m[3])];
-            return [13, 148, 136];
-        }
-        // k > 0 светлее, k < 0 темнее
-        function shade(rgb, k) {
-            const f = (v) => Math.round(k >= 0 ? v + (255 - v) * k : v * (1 + k));
-            return 'rgb(' + f(rgb[0]) + ',' + f(rgb[1]) + ',' + f(rgb[2]) + ')';
-        }
-
-        let built = { src: null, len: -1, chains: [] };
-        function buildChains() {
-            const open = new Map(), chains = [];
-            for (let i = 0; i < state.lines.length; i++) {
-                const l = state.lines[i];
-                const style = '|' + l.color + '|' + l.size + '|' + (l.brush === 'o' ? 'o' : 'w') + '|' + (l.mine ? 1 : 0);
-                const from = l.prevX + '|' + l.prevY + style;
-                let c = open.get(from);
-                if (c) {
-                    open.delete(from);
-                } else {
-                    c = {
-                        pts: [l.prevX, l.prevY], color: l.color, size: l.size, brush: l.brush === 'o' ? 'o' : 'w', mine: !!l.mine,
-                        minY: l.prevY, maxY: l.prevY
-                    };
-                    chains.push(c);
-                }
-                c.pts.push(l.currX, l.currY);
-                if (l.currY < c.minY) c.minY = l.currY;
-                if (l.currY > c.maxY) c.maxY = l.currY;
-                open.set(l.currX + '|' + l.currY + style, c);
-            }
-            built = { src: state.lines, len: state.lines.length, chains: chains };
-        }
-
-        // Путь мазка со сдвигом off вбок (для щетинок), сглаженный квадратичными кривыми
-        function tracePath(c, off, i0, i1) {
-            const p = c.pts, nx = c.nx, ny = c.ny;
-            const X = (i) => p[2 * i] + (nx ? nx[i] * off : 0);
-            const Y = (i) => p[2 * i + 1] + (ny ? ny[i] * off : 0);
-            ctx.beginPath();
-            ctx.moveTo(X(i0), Y(i0));
-            for (let i = i0 + 1; i <= i1; i++) {
-                ctx.quadraticCurveTo(X(i - 1), Y(i - 1), (X(i - 1) + X(i)) / 2, (Y(i - 1) + Y(i)) / 2);
-            }
-            ctx.lineTo(X(i1), Y(i1));
-        }
-        function strokeChain(c, off, i0, i1, width, color, alpha) {
-            if (i1 <= i0) return;
-            tracePath(c, off, i0, i1);
-            ctx.lineWidth = width;
-            ctx.strokeStyle = color;
-            ctx.globalAlpha = alpha;
-            ctx.stroke();
-        }
-
-        // Акварель: прозрачный слой, у краёв светлее, в центре насыщеннее
-        function drawWater(c) {
-            if (!c.rgb) c.rgb = parseColor(c.color);
-            const col = 'rgb(' + c.rgb[0] + ',' + c.rgb[1] + ',' + c.rgb[2] + ')';
-            const n = c.pts.length / 2 - 1;
-            strokeChain(c, 0, 0, n, c.size * 2.5, col, 0.06);
-            strokeChain(c, 0, 0, n, c.size * 1.95, col, 0.09);
-            strokeChain(c, 0, 0, n, c.size * 1.4, col, 0.13);
-            strokeChain(c, 0, 0, n, c.size * 0.9, col, 0.2);
-        }
-
-        // Масло: плотная краска, видны борозды от щетины, светлый и тёмный край
-        function prepOil(c) {
-            const n = c.pts.length / 2;
-            c.nx = new Float32Array(n); c.ny = new Float32Array(n);
-            for (let i = 0; i < n; i++) {
-                const a = Math.max(0, i - 3), b = Math.min(n - 1, i + 3);
-                const tx = c.pts[2 * b] - c.pts[2 * a], ty = c.pts[2 * b + 1] - c.pts[2 * a + 1];
-                const len = Math.hypot(tx, ty) || 1;
-                c.nx[i] = -ty / len; c.ny[i] = tx / len;
-            }
-            const rgb = parseColor(c.color), seed = c.pts[0] * 0.37 + c.pts[1] * 0.11 + c.size;
-            const N = Math.max(5, Math.min(14, Math.round(c.size) + 2));
-            c.bristles = [];
-            for (let j = 0; j < N; j++) {
-                const t0 = n > 10 ? Math.floor(rnd(seed, j + 80) * 5) : 0, t1 = n > 10 ? Math.floor(rnd(seed, j + 120) * 5) : 0;
-                c.bristles.push({
-                    off: (j / (N - 1) - 0.5) * c.size * 1.3 + (rnd(seed, j + 160) - 0.5) * c.size * 0.12,
-                    w: Math.max(1, c.size * 1.3 / N * (0.8 + 0.8 * rnd(seed, j + 40))),
-                    color: shade(rgb, (rnd(seed, j) - 0.5) * 0.8),
-                    alpha: 0.7 + 0.28 * rnd(seed, j + 200),
-                    i0: t0, i1: n - 1 - t1
-                });
-            }
-            c.base = shade(rgb, -0.1); c.hi = shade(rgb, 0.45); c.lo = shade(rgb, -0.4);
-        }
-        function drawOil(c) {
-            if (!c.bristles) prepOil(c);
-            const n = c.pts.length / 2 - 1;
-            strokeChain(c, 0, 0, n, c.size * 1.0, c.base, 0.85);
-            for (let j = 0; j < c.bristles.length; j++) {
-                const b = c.bristles[j];
-                strokeChain(c, b.off, b.i0, b.i1, b.w, b.color, b.alpha);
-            }
-            strokeChain(c, -c.size * 0.44, 0, n, Math.max(1, c.size * 0.14), c.hi, 0.6);
-            strokeChain(c, c.size * 0.47, 0, n, Math.max(1, c.size * 0.14), c.lo, 0.5);
-        }
-
-        // Перерисовка из памяти: быстрая, без запросов к серверу. Рисуем только то, что видно на экране.
-        function redraw() {
-            state.raf = 0;
-            if (built.src !== state.lines || built.len !== state.lines.length) buildChains();
-            ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-            const sy = window.pageYOffset, h = window.innerHeight;
-            ctx.save();
-            ctx.translate(0, -sy);
-            ctx.lineCap = 'round';
-            ctx.lineJoin = 'round';
-            for (let i = 0; i < built.chains.length; i++) {
-                const c = built.chains[i];
-                if (!state.showOthers && !c.mine) continue;
-                const pad = c.size * 2.5;
-                if (c.maxY + pad < sy || c.minY - pad > sy + h) continue;
-                if (c.brush === 'o') drawOil(c); else drawWater(c);
-            }
-            ctx.restore();
-            ctx.globalAlpha = 1;
-        }
-        function scheduleRedraw() { if (!state.raf) state.raf = requestAnimationFrame(redraw); }
-
-        function addLine(line) {
-            state.lines.push(line);
-            if (state.lines.length > MAX_LINES) state.lines.splice(0, state.lines.length - MAX_LINES);
-        }
-
-        window.addEventListener('resize', resizeCanvas);
-        window.addEventListener('scroll', scheduleRedraw, { passive: true });
-
-        // ---- ввод: мышь и палец ----
-        const NO_DRAW = '.nav-btn, .scroll-btn, .magazine-card, .about-photo, .service-card, .steps li, .book-container, .social-link, .lightbox, .tools, .collection-btn, .hidden-char, .coll-overlay, .contact-form, .coll-hint, .site-footer';
-
-        function isTextZone(x) {
-            const center = window.innerWidth / 2;
-            const limit = window.innerWidth > 968 ? 320 : 120;
-            return x > center - limit && x < center + limit;
-        }
-        function canStart(target, x) {
-            if (!state.canDraw || isTextZone(x)) return false;
-            const tag = target.tagName;
-            if (tag === 'IMG' || tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'BUTTON') return false;
-            return !target.closest(NO_DRAW);
-        }
-        function startAt(x, y) {
-            state.drawing = true; state.lx = x; state.ly = y;
-            if (state.tool === 'eraser') eraseSweep(x, y, x, y);
-        }
-
-        // ---- ластик: подтирает только свои линии, как в Paint ----
-        // Линия состоит из коротких отрезков. Ластик вырезает из отрезков круг:
-        // уцелевшие концы остаются, середина исчезает (у всех посетителей тоже).
-        function eraserRadius() { return state.size * 1.5 + 6; }
-        const round1 = (n) => Math.round(n * 10) / 10;
-
-        // Часть отрезка A-B внутри круга (C, r): [t1, t2] от 0 до 1 или null
-        function circleCut(ax, ay, bx, by, cx, cy, r) {
-            const dx = bx - ax, dy = by - ay, fx = ax - cx, fy = ay - cy;
-            const a = dx * dx + dy * dy;
-            if (a === 0) return Math.hypot(fx, fy) <= r ? [0, 1] : null;
-            const b = 2 * (fx * dx + fy * dy);
-            const c = fx * fx + fy * fy - r * r;
-            const disc = b * b - 4 * a * c;
-            if (disc < 0) return null;
-            const sq = Math.sqrt(disc);
-            const t1 = (-b - sq) / (2 * a), t2 = (-b + sq) / (2 * a);
-            if (t2 < 0 || t1 > 1) return null;
-            return [Math.max(0, t1), Math.min(1, t2)];
-        }
-        function piece(l, t0, t1) {
-            const dx = l.currX - l.prevX, dy = l.currY - l.prevY;
-            return {
-                prevX: round1(l.prevX + dx * t0), prevY: round1(l.prevY + dy * t0),
-                currX: round1(l.prevX + dx * t1), currY: round1(l.prevY + dy * t1),
-                color: l.color, size: l.size, brush: l.brush || 'w', lid: randomId(10), mine: true
-            };
-        }
-        // Один круг ластика. removed: id старых отрезков (они есть на сервере),
-        // added: новые кусочки, которые ещё не отправлены.
-        function cutCircle(cx, cy, r, removed, added) {
-            const gone = new Set(), fresh = [];
-            for (let i = 0; i < state.lines.length; i++) {
-                const l = state.lines[i];
-                if (!l.mine || !l.lid) continue;
-                const rr = r + l.size * (l.brush === 'o' ? 0.75 : 1.25); // с учётом видимой ширины мазка
-                if (Math.max(l.prevY, l.currY) + rr < cy || Math.min(l.prevY, l.currY) - rr > cy) continue;
-                if (Math.max(l.prevX, l.currX) + rr < cx || Math.min(l.prevX, l.currX) - rr > cx) continue;
-                const t = circleCut(l.prevX, l.prevY, l.currX, l.currY, cx, cy, rr);
-                if (!t) continue;
-                gone.add(l.lid);
-                const len = Math.hypot(l.currX - l.prevX, l.currY - l.prevY);
-                if (t[0] * len > 1) fresh.push(piece(l, 0, t[0]));
-                if ((1 - t[1]) * len > 1) fresh.push(piece(l, t[1], 1));
-            }
-            if (!gone.size) return;
-            state.lines = state.lines.filter((l) => !gone.has(l.lid));
-            gone.forEach((lid) => { if (added.has(lid)) added.delete(lid); else removed.add(lid); });
-            fresh.forEach((l) => { state.lines.push(l); added.set(l.lid, l); });
-        }
-        function sendCut(removeIds, addLines) {
-            if (!ws || ws.readyState !== WebSocket.OPEN) return;
-            const clean = (l) => ({ prevX: l.prevX, prevY: l.prevY, currX: l.currX, currY: l.currY, color: l.color, size: l.size, brush: l.brush || 'w', lid: l.lid });
-            const CHUNK = 25;
-            let adds = addLines.map(clean);
-            for (let i = 0; i < Math.max(removeIds.length, 1); i += CHUNK) {
-                const rem = removeIds.slice(i, i + CHUNK);
-                const last = i + CHUNK >= removeIds.length;
-                const add = last ? adds : adds.splice(0, rem.length * 6);
-                ws.send(JSON.stringify({ cut: { remove: rem, add: add } }));
-            }
-        }
-        // Проводим ластиком от (x1, y1) до (x2, y2) координат экрана, не оставляя пропусков
-        function eraseSweep(x1, y1, x2, y2) {
-            const r = eraserRadius(), sy = window.pageYOffset;
-            const steps = Math.max(1, Math.ceil(Math.hypot(x2 - x1, y2 - y1) / (r * 0.5)));
-            const removed = new Set(), added = new Map();
-            for (let i = 1; i <= steps; i++) {
-                cutCircle(x1 + (x2 - x1) * i / steps, y1 + (y2 - y1) * i / steps + sy, r, removed, added);
-            }
-            if (!removed.size && !added.size) return;
-            scheduleRedraw();
-            sendCut(Array.from(removed), Array.from(added.values()));
-        }
-        function eraseAllMine() {
-            const before = state.lines.length;
-            state.lines = state.lines.filter((l) => !l.mine);
-            if (state.lines.length === before) { toast('У вас пока нет рисунков'); return; }
-            redraw();
-            if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ clear: true }));
-            toast('Ваши рисунки стёрты');
-        }
-        function updateEraserCursor() {
-            const r = Math.round(eraserRadius()), d = r * 2 + 4;
-            const svg = "<svg xmlns='http://www.w3.org/2000/svg' width='" + d + "' height='" + d + "'><circle cx='" + d / 2 + "' cy='" + d / 2 +
-                "' r='" + r + "' fill='rgba(236,72,153,0.12)' stroke='#ec4899' stroke-width='2'/></svg>";
-            document.body.style.setProperty('--eraser-cursor', 'url("data:image/svg+xml;utf8,' + encodeURIComponent(svg) + '") ' + d / 2 + ' ' + d / 2 + ', cell');
-        }
-
-        function moveTo(x, y) {
-            if (state.tool === 'eraser') {
-                if (Math.hypot(x - state.lx, y - state.ly) < 2) return;
-                eraseSweep(state.lx, state.ly, x, y); state.lx = x; state.ly = y; return;
-            }
-            if (Math.hypot(x - state.lx, y - state.ly) < 4) return; // не шлём лишние микро-мазки
-            const sy = window.pageYOffset;
-            const line = {
-                prevX: Math.round(state.lx * 10) / 10, prevY: Math.round((state.ly + sy) * 10) / 10,
-                currX: Math.round(x * 10) / 10, currY: Math.round((y + sy) * 10) / 10,
-                color: state.color, size: state.size, brush: state.brush, lid: randomId(10), mine: true
-            };
-            addLine(line);
-            scheduleRedraw();
-            sendLine(line);
-            state.lx = x; state.ly = y;
-        }
-
-        document.addEventListener('mousedown', (e) => { if (canStart(e.target, e.clientX)) startAt(e.clientX, e.clientY); });
-        document.addEventListener('mousemove', (e) => { if (state.drawing) moveTo(e.clientX, e.clientY); });
-        document.addEventListener('touchstart', (e) => {
-            const t = e.touches && e.touches[0];
-            if (t && canStart(e.target, t.clientX)) startAt(t.clientX, t.clientY);
-        }, { passive: true });
-        document.addEventListener('touchmove', (e) => {
-            const t = e.touches && e.touches[0];
-            if (!state.drawing || !t) return;
-            e.preventDefault(); // пока включён режим рисования, страница не скроллится
-            moveTo(t.clientX, t.clientY);
-        }, { passive: false });
-        const stop = () => { state.drawing = false; };
-        document.addEventListener('mouseup', stop);
-        document.addEventListener('touchend', stop);
-        document.addEventListener('touchcancel', stop);
-
-        // ---- WebSocket ----
-        let ws = null, retries = 0;
-        const liveDot = document.getElementById('liveDot');
-
-        function connectWebSocket() {
-            const proto = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
-            ws = new WebSocket(proto + window.location.host + '/ws/draw?cid=' + CID);
-            ws.onopen = () => { retries = 0; liveDot.classList.add('on'); loadHistory(); };
-            ws.onmessage = (event) => {
-                let l;
-                try { l = JSON.parse(event.data); } catch (e) { return; }
-                if (l && l.cut) {
-                    const gone = new Set(l.cut.remove || []);
-                    state.lines = state.lines.filter((x) => !gone.has(x.lid));
-                    (l.cut.add || []).forEach((x) => { if (typeof x.prevX === 'number') addLine(x); });
-                    scheduleRedraw();
-                    return;
-                }
-                if (!l || typeof l.prevX !== 'number') return;
-                addLine(l);
-                if (state.showOthers) scheduleRedraw();
-            };
-            ws.onclose = () => {
-                liveDot.classList.remove('on');
-                retries += 1;
-                setTimeout(connectWebSocket, Math.min(15000, 1500 * retries));
-            };
-        }
-        function sendLine(line) {
-            if (ws && ws.readyState === WebSocket.OPEN) {
-                ws.send(JSON.stringify({
-                    prevX: line.prevX, prevY: line.prevY, currX: line.currX, currY: line.currY,
-                    color: line.color, size: line.size, brush: line.brush || 'w', lid: line.lid
-                }));
-            }
-        }
-        // История один раз при подключении (раньше шёл запрос на каждый скролл)
-        function loadHistory() {
-            fetch('/api/get_lines?cid=' + CID)
-                .then((res) => res.json())
-                .then((data) => { state.lines = Array.isArray(data.lines) ? data.lines : []; redraw(); })
-                .catch((err) => console.log('Ошибка загрузки истории:', err));
-        }
-
-        // ---- панель кисти ----
-        const tools = document.getElementById('tools');
-        const swatchBox = document.getElementById('swatches');
-        const sizeBox = document.getElementById('sizes');
-        const btnDraw = document.getElementById('btnDraw');
-        const btnOthers = document.getElementById('btnOthers');
-
-        COLORS.forEach((c, i) => {
-            const b = document.createElement('button');
-            b.type = 'button'; b.className = 'swatch' + (i === 0 ? ' active' : '');
-            b.style.background = c; b.setAttribute('aria-label', 'Цвет ' + (i + 1));
-            b.addEventListener('click', () => {
-                state.color = c;
-                swatchBox.querySelectorAll('.swatch').forEach((x) => x.classList.toggle('active', x === b));
-            });
-            swatchBox.appendChild(b);
-        });
-        SIZES.forEach((s, i) => {
-            const b = document.createElement('button');
-            b.type = 'button'; b.className = 'size-btn' + (i === 1 ? ' active' : '');
-            b.setAttribute('aria-label', 'Толщина ' + (i + 1));
-            b.innerHTML = '<i style="width:' + (s + 2) + 'px;height:' + (s + 2) + 'px"></i>';
-            b.addEventListener('click', () => {
-                state.size = s;
-                updateEraserCursor();
-                sizeBox.querySelectorAll('.size-btn').forEach((x) => x.classList.toggle('active', x === b));
-            });
-            sizeBox.appendChild(b);
-        });
-        const btnWater = document.getElementById('btnWater');
-        const btnOil = document.getElementById('btnOil');
-        const btnEraser = document.getElementById('btnEraser');
-        function setTool(tool) {
-            state.tool = tool;
-            if (tool === 'eraser') state.canDraw = true;
-            btnWater.classList.toggle('on', tool === 'brush' && state.brush === 'w');
-            btnOil.classList.toggle('on', tool === 'brush' && state.brush === 'o');
-            btnEraser.classList.toggle('on', tool === 'eraser');
-            updateEraserCursor();
-            document.body.classList.toggle('erasing', tool === 'eraser' && state.canDraw);
-            syncToolButtons();
-        }
-        function setBrush(kind) { state.brush = kind; state.canDraw = true; setTool('brush'); }
-        btnWater.addEventListener('click', () => setBrush('w'));
-        btnOil.addEventListener('click', () => setBrush('o'));
-        btnEraser.addEventListener('click', () => setTool('eraser'));
-        document.getElementById('btnClearMine').addEventListener('click', eraseAllMine);
-
-        function syncToolButtons() {
-            btnDraw.classList.toggle('on', state.canDraw);
-            btnDraw.textContent = state.canDraw ? '✏️ Рисую' : '✏️ Рисовать';
-            btnOthers.classList.toggle('on', state.showOthers);
-            btnOthers.textContent = state.showOthers ? '👁️ Чужие' : '🙈 Скрыты';
-            document.body.classList.toggle('erasing', state.tool === 'eraser' && state.canDraw);
-        }
-        btnDraw.addEventListener('click', () => { state.canDraw = !state.canDraw; syncToolButtons(); });
-        btnOthers.addEventListener('click', () => { state.showOthers = !state.showOthers; syncToolButtons(); redraw(); });
-        document.getElementById('toolsToggle').addEventListener('click', () => tools.classList.toggle('collapsed'));
-        if (window.innerWidth <= 968) tools.classList.add('collapsed');
-        syncToolButtons();
-
-        function startCanvas() { resizeCanvas(); connectWebSocket(); }
-        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', startCanvas);
-        else startCanvas();
-
-        // =====================================================================
-        // 2. МИНИ-ИГРА: НАЙДИ ГЕРОЕВ
-        // =====================================================================
-        const STORE_KEY = 'fairyFoundV1';
-        const charEls = Array.from(document.querySelectorAll('.hidden-char'));
-        const total = charEls.length;
-        const collBtn = document.getElementById('collectionBtn');
-        const counter = document.getElementById('collCounter');
-        const overlay2 = document.getElementById('collOverlay');
-        const toastEl = document.getElementById('toast');
-        const hintEl = document.getElementById('collHint');
-        let found = [];
-        try { found = JSON.parse(storeGet(STORE_KEY) || '[]'); } catch (e) { found = []; }
-        if (!Array.isArray(found)) found = [];
-
-        const info = {};
-        charEls.forEach((el) => {
-            info[el.dataset.id] = {
-                id: el.dataset.id, name: el.dataset.name, book: el.dataset.book,
-                emoji: el.dataset.emoji, img: el.dataset.img, hint: el.dataset.hint
-            };
-        });
-
-        function updateCounter() { counter.textContent = found.length + '/' + total; }
-        function toast(text) {
-            toastEl.textContent = text;
-            toastEl.classList.add('show');
-            clearTimeout(toast.t);
-            toast.t = setTimeout(() => toastEl.classList.remove('show'), 2600);
-        }
-
-        function visual(c) {
-            const wrap = document.createElement('div');
-            wrap.className = 'coll-art';
-            const img = document.createElement('img');
-            img.src = c.img; img.alt = c.name; img.dataset.emoji = c.emoji;
-            img.addEventListener('error', () => charFallback(img));
-            wrap.appendChild(img);
-            return wrap;
-        }
-
-        function renderCollection() {
-            const grid = document.getElementById('collGrid');
-            grid.innerHTML = '';
-            Object.keys(info).forEach((id) => {
-                const c = info[id];
-                const ok = found.indexOf(id) !== -1;
-                const item = document.createElement('div');
-                item.className = 'coll-item' + (ok ? '' : ' locked');
-                item.appendChild(visual(c));
-                const h = document.createElement('h4');
-                h.textContent = ok ? c.name : '???';
-                const p = document.createElement('p');
-                p.textContent = ok ? (c.book ? 'Из книги «' + c.book + '»' : 'Герой сказок Анны-Анастасии') : c.hint;
-                item.appendChild(h); item.appendChild(p);
-                grid.appendChild(item);
-            });
-            const done = found.length >= total && total > 0;
-            document.getElementById('collBar').style.width = (total ? (found.length / total) * 100 : 0) + '%';
-            document.getElementById('collSub').textContent = done ? 'Коллекция собрана!' : 'Найдено ' + found.length + ' из ' + total;
-            document.getElementById('collDone').hidden = !done;
-            document.getElementById('collDoneLink').href = 'https://t.me/angry_miu?text=' +
-                encodeURIComponent('Здравствуйте! Нашёл всех героев на вашем сайте ✨');
-        }
-        function openCollection() { renderCollection(); overlay2.classList.add('active'); hideHint(); }
-        function closeCollection() { overlay2.classList.remove('active'); }
-        collBtn.addEventListener('click', openCollection);
-        document.getElementById('collClose').addEventListener('click', closeCollection);
-        overlay2.addEventListener('click', (e) => { if (e.target === overlay2) closeCollection(); });
-        document.getElementById('collReset').addEventListener('click', () => {
-            if (!window.confirm('Начать игру заново? Найденные герои снова спрячутся.')) return;
-            found = []; storeSet(STORE_KEY, '[]');
-            charEls.forEach((el) => el.classList.remove('gone'));
-            updateCounter(); renderCollection();
-        });
-
-        function fly(el) {
-            const from = el.getBoundingClientRect();
-            const to = collBtn.getBoundingClientRect();
-            const clone = el.cloneNode(true);
-            clone.className = 'flying-char';
-            clone.removeAttribute('style');
-            clone.style.cssText = 'left:' + from.left + 'px;top:' + from.top + 'px;width:' + from.width + 'px;height:' + from.height + 'px;--size:' + from.width + 'px;';
-            document.body.appendChild(clone);
-            const dx = to.left + to.width / 2 - (from.left + from.width / 2);
-            const dy = to.top + to.height / 2 - (from.top + from.height / 2);
-            const anim = clone.animate([
-                { transform: 'translate(0,0) scale(1) rotate(0)', opacity: 1 },
-                { transform: 'translate(' + dx * 0.4 + 'px,' + (dy * 0.4 - 70) + 'px) scale(1.35) rotate(12deg)', opacity: 1, offset: 0.4 },
-                { transform: 'translate(' + dx + 'px,' + dy + 'px) scale(0.2) rotate(-10deg)', opacity: 0.3 }
-            ], { duration: 850, easing: 'cubic-bezier(.5,0,.3,1)' });
-            anim.onfinish = () => {
-                clone.remove();
-                collBtn.classList.remove('pulse'); void collBtn.offsetWidth; collBtn.classList.add('pulse');
-            };
-        }
-
-        function sparkleBurst(el) {
-            const r = el.getBoundingClientRect();
-            for (let i = 0; i < 10; i++) {
-                const s = document.createElement('div');
-                s.className = 'magic-sparkle';
-                const size = Math.random() * 8 + 4;
-                s.style.cssText = 'width:' + size + 'px;height:' + size + 'px;left:' + (r.left + r.width / 2 + (Math.random() - 0.5) * r.width) + 'px;top:' +
-                    (r.top + r.height / 2 + (Math.random() - 0.5) * r.height) + 'px;background:' + COLORS[i % COLORS.length];
-                document.body.appendChild(s);
-                setTimeout(() => s.remove(), 1000);
-            }
-        }
-
-        function collect(el) {
-            const id = el.dataset.id;
-            if (found.indexOf(id) !== -1) return;
-            found.push(id);
-            storeSet(STORE_KEY, JSON.stringify(found));
-            sparkleBurst(el);
-            fly(el);
-            el.classList.add('gone');
-            updateCounter();
-            hideHint();
-            if (found.length >= total) {
-                toast('Вы нашли всех героев! 🎉');
-                setTimeout(openCollection, 1300);
-            } else {
-                toast('Нашёлся: ' + el.dataset.name + '! ' + found.length + ' из ' + total);
-            }
-        }
-        charEls.forEach((el) => {
-            if (found.indexOf(el.dataset.id) !== -1) el.classList.add('gone');
-            el.addEventListener('click', (e) => { e.stopPropagation(); collect(el); });
-        });
-        updateCounter();
-
-        function hideHint() { hintEl.classList.remove('show'); storeSet('fairyHintSeen', '1'); }
-        hintEl.addEventListener('click', hideHint);
-        if (total > 0 && found.length === 0 && !storeGet('fairyHintSeen')) {
-            setTimeout(() => hintEl.classList.add('show'), 2500);
-            setTimeout(hideHint, 12000);
-        }
-
-        // =====================================================================
-        // 3. СЛАЙДЕРЫ КНИГ, ПРОСМОТР КАРТИНОК, ФОРМА, ЭФФЕКТЫ
-        // =====================================================================
-        const bookPositions = {};
-        window.slideBook = function (bookIndex, direction) {
-            const box = document.getElementById('book-' + bookIndex);
-            const track = box.querySelector('.book-track');
-            const pages = box.querySelectorAll('.book-page');
-            let pos = (bookPositions[bookIndex] || 0) + direction;
-            if (pos >= pages.length) pos = 0; else if (pos < 0) pos = pages.length - 1;
-            bookPositions[bookIndex] = pos;
-            track.style.transform = 'translateX(-' + (pos * 100) + '%)';
-        };
-
-        const lightbox = document.getElementById('lightboxOverlay');
-        const lightboxImg = document.getElementById('lightboxImage');
-        window.openLightbox = function (src) {
-            if (!src) return;
-            lightboxImg.src = src;
-            lightbox.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        };
-        window.closeLightbox = function () {
-            lightbox.classList.remove('active');
-            document.body.style.overflow = '';
-            setTimeout(() => { lightboxImg.src = ''; }, 400);
-        };
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') { window.closeLightbox(); closeCollection(); }
-        });
-
-        // Форма связи: письмо уходит на почту художницы через сервер. Если почта на сервере
-        // не настроена или сервер недоступен, открывается почтовая программа (или Telegram,
-        // когда адрес почты не задан). window.fairyGo можно подменить, например в тестах.
-        window.fairyGo = window.fairyGo || function (url, newTab) {
-            if (newTab) window.open(url, '_blank', 'noopener'); else window.location.href = url;
-        };
-        window.sendContact = async function (event) {
-            event.preventDefault();
-            const form = event.target;
-            const status = document.getElementById('formStatus');
-            const btn = document.getElementById('formBtn');
-            const email = form.dataset.email || '';
-            const data = {
-                name: form.elements.name.value.trim(),
-                contact: form.elements.contact.value.trim(),
-                message: form.elements.message.value.trim(),
-                website: form.elements.website.value
-            };
-            const say = (text, cls) => { status.textContent = text; status.className = 'form-status' + (cls ? ' ' + cls : ''); };
-            const fallback = () => {
-                const body = 'Здравствуйте! Меня зовут ' + data.name + '.\n\n' + data.message + '\n\nКак со мной связаться: ' + data.contact;
-                if (email) {
-                    say('Открываем почтовую программу, останется нажать «Отправить».');
-                    window.fairyGo('mailto:' + email + '?subject=' + encodeURIComponent('Сообщение с сайта') + '&body=' + encodeURIComponent(body), false);
-                } else {
-                    say('Открываем Telegram, останется нажать «Отправить».');
-                    window.fairyGo('https://t.me/angry_miu?text=' + encodeURIComponent(body), true);
-                }
-            };
-            btn.disabled = true;
-            say('Отправляем…');
-            try {
-                const res = await fetch('/api/contact', {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data)
-                });
-                if (res.ok) { say('Спасибо! Письмо отправлено, Анна-Анастасия скоро ответит ✨', 'ok'); form.reset(); }
-                else if (res.status === 429) say('Вы отправили много сообщений подряд. Попробуйте чуть позже.', 'err');
-                else if (res.status === 400) say('Проверьте, пожалуйста, что все поля заполнены.', 'err');
-                else fallback();
-            } catch (e) {
-                fallback();
-            } finally {
-                btn.disabled = false;
-            }
-        };
-
-        // Волшебная пыльца за курсором: звёзды, блёстки и светлячки.
-        // Линия за мышкой не рисуется, чтобы не мешать рисовать.
-        const trailCanvas = document.getElementById('trailCanvas');
-        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        if (window.matchMedia('(pointer: fine)').matches && !reduceMotion) {
-            const tctx = trailCanvas.getContext('2d');
-            const DUST_COLORS = ['#f59e0b', '#2dd4bf', '#ec4899', '#8b5cf6', '#fbbf24', '#60a5fa'];
-            const parts = [];
-            let tRaf = 0, lastX = null, lastY = 0, acc = 0, lastSpawn = 0;
-
-            const resizeTrail = () => {
-                const r = Math.min(window.devicePixelRatio || 1, 2);
-                trailCanvas.width = Math.round(window.innerWidth * r);
-                trailCanvas.height = Math.round(window.innerHeight * r);
-                tctx.setTransform(r, 0, 0, r, 0, 0);
-            };
-            resizeTrail();
-            window.addEventListener('resize', resizeTrail);
-
-            // Звезда: n лучей, радиусы r и r*inner по очереди
-            function starPath(x, y, r, inner, rays, rot) {
-                tctx.beginPath();
-                for (let i = 0; i < rays * 2; i++) {
-                    const a = rot + i * Math.PI / rays;
-                    const rad = i % 2 === 0 ? r : r * inner;
-                    tctx.lineTo(x + Math.cos(a) * rad, y + Math.sin(a) * rad);
-                }
-                tctx.closePath();
-            }
-            function spawn(x, y, now) {
-                const roll = Math.random();
-                parts.push({
-                    kind: roll < 0.45 ? 'sparkle' : roll < 0.75 ? 'star' : 'glow',
-                    x: x + (Math.random() - 0.5) * 18, y: y + (Math.random() - 0.5) * 18,
-                    vx: (Math.random() - 0.5) * 1.1, vy: -0.2 - Math.random() * 0.7,
-                    rot: Math.random() * 3, spin: (Math.random() - 0.5) * 0.08,
-                    size: 7 + Math.random() * 11, born: now, ttl: 1000 + Math.random() * 900,
-                    tw: Math.random() * 6, color: DUST_COLORS[Math.floor(Math.random() * DUST_COLORS.length)]
-                });
-                if (parts.length > 90) parts.shift();
-            }
-            function frame(now) {
-                tRaf = 0;
-                tctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-                for (let i = parts.length - 1; i >= 0; i--) {
-                    const p = parts[i];
-                    const k = (now - p.born) / p.ttl;
-                    if (k >= 1) { parts.splice(i, 1); continue; }
-                    p.x += p.vx; p.y += p.vy; p.vy += 0.006; p.vx *= 0.995; p.rot += p.spin;
-                    // появляется быстро, гаснет плавно, мерцает
-                    const fade = k < 0.12 ? k / 0.12 : 1 - (k - 0.12) / 0.88;
-                    const a = Math.max(0, fade) * (0.7 + 0.3 * Math.sin(now * 0.014 + p.tw));
-                    const s = p.size * (0.55 + 0.45 * fade);
-                    tctx.globalAlpha = a;
-                    tctx.fillStyle = p.color;
-                    tctx.shadowColor = p.color;
-                    tctx.shadowBlur = 12;
-                    if (p.kind === 'sparkle') { starPath(p.x, p.y, s, 0.16, 4, p.rot); tctx.fill(); }
-                    else if (p.kind === 'star') { starPath(p.x, p.y, s * 0.8, 0.45, 5, p.rot); tctx.fill(); }
-                    else { tctx.beginPath(); tctx.arc(p.x, p.y, s * 0.28, 0, Math.PI * 2); tctx.fill(); }
-                }
-                tctx.globalAlpha = 1; tctx.shadowBlur = 0;
-                if (parts.length) tRaf = requestAnimationFrame(frame);
-            }
-            document.addEventListener('mousemove', (e) => {
-                const now = performance.now();
-                if (lastX !== null && !state.drawing) {
-                    acc += Math.hypot(e.clientX - lastX, e.clientY - lastY);
-                    let burst = 0;
-                    while (acc > 26 && burst < 4) { acc -= 26; burst++; spawn(e.clientX, e.clientY, now); lastSpawn = now; }
-                    if (acc > 26) acc = 0;
-                    if (!burst && now - lastSpawn > 90 && acc > 3) { spawn(e.clientX, e.clientY, now); lastSpawn = now; acc = 0; }
-                }
-                lastX = e.clientX; lastY = e.clientY;
-                if (parts.length && !tRaf) tRaf = requestAnimationFrame(frame);
-            });
-        }
-
-        // Параллакс персонажа в первом экране
-        if (window.matchMedia('(pointer: fine)').matches) {
-            document.addEventListener('mousemove', (e) => {
-                const rabbit = document.getElementById('rabbit-parallax');
-                if (rabbit) {
-                    const dx = (window.innerWidth / 2 - e.clientX) * 0.02;
-                    const dy = (window.innerHeight / 2 - e.clientY) * 0.02;
-                    rabbit.style.transform = 'translate(' + dx + 'px, ' + dy + 'px)';
-                }
-            });
-        }
-    })();
-    </script>
+    <script>window.GAME_DATA = {{ game|tojson }};</script>
+    <script src="/static/js/main.js?v={{ ver }}" defer></script>
 </body>
 </html>

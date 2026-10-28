@@ -1,0 +1,2 @@
+# Нужно только для tools/optimize_images.py (превращение картинок в WebP)
+pillow>=10

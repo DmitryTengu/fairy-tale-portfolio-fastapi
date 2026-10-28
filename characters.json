@@ -1,0 +1,536 @@
+[
+ {
+  "id": "liana",
+  "image": "characters/liana.webp",
+  "name": "Лиана, невеста-гоблин",
+  "book": ""
+ },
+ {
+  "id": "blue_cat",
+  "image": "characters/blue_cat.webp",
+  "name": "Синий кот-улыбака",
+  "book": ""
+ },
+ {
+  "id": "pie_monster",
+  "image": "characters/pie_monster.webp",
+  "name": "Пирожное чудище",
+  "book": ""
+ },
+ {
+  "id": "green_cat",
+  "image": "characters/green_cat.webp",
+  "name": "Кот в зелёных очках",
+  "book": ""
+ },
+ {
+  "id": "frog",
+  "image": "characters/frog.webp",
+  "name": "Лягушка с длинным языком",
+  "book": "Фырка и цветок-солнце"
+ },
+ {
+  "id": "elf_reading",
+  "image": "characters/elf_reading.webp",
+  "name": "Эльф за книгой",
+  "book": ""
+ },
+ {
+  "id": "yokai_girl",
+  "image": "characters/yokai_girl.webp",
+  "name": "Девочка с длинной шеей",
+  "book": ""
+ },
+ {
+  "id": "sleeping_child",
+  "image": "characters/sleeping_child.webp",
+  "name": "Спящий малыш",
+  "book": ""
+ },
+ {
+  "id": "crow_glasses",
+  "image": "characters/crow_glasses.webp",
+  "name": "Ворон в очках",
+  "book": ""
+ },
+ {
+  "id": "night_father",
+  "image": "characters/night_father.webp",
+  "name": "Папа у колыбели",
+  "book": ""
+ },
+ {
+  "id": "cat_ginger",
+  "image": "characters/cat_ginger.webp",
+  "name": "Рыжий кот в колпачке",
+  "book": ""
+ },
+ {
+  "id": "pooh_owl",
+  "image": "characters/pooh_owl.webp",
+  "name": "Мудрый Сова",
+  "book": "Винни-Пух"
+ },
+ {
+  "id": "pooh_mother",
+  "image": "characters/pooh_mother.webp",
+  "name": "Улыбчивая Кенга",
+  "book": "Винни-Пух"
+ },
+ {
+  "id": "blacksmith",
+  "image": "characters/blacksmith.webp",
+  "name": "Кузнец",
+  "book": ""
+ },
+ {
+  "id": "pooh_eeyore",
+  "image": "characters/pooh_eeyore.webp",
+  "name": "Иа в шляпе",
+  "book": "Винни-Пух"
+ },
+ {
+  "id": "fox_mother",
+  "image": "characters/fox_mother.webp",
+  "name": "Лисица-мама",
+  "book": "Лисья колыбельная"
+ },
+ {
+  "id": "tree_monster",
+  "image": "characters/tree_monster.webp",
+  "name": "Дерево-хищник",
+  "book": ""
+ },
+ {
+  "id": "star_bunny_big",
+  "image": "characters/star_bunny_big.webp",
+  "name": "Большой звёздный заяц",
+  "book": ""
+ },
+ {
+  "id": "dragon_sky",
+  "image": "characters/dragon_sky.webp",
+  "name": "Дракон над городом",
+  "book": ""
+ },
+ {
+  "id": "witch_13",
+  "image": "characters/witch_13.webp",
+  "name": "Именинница в красном капюшоне",
+  "book": ""
+ },
+ {
+  "id": "elf_portrait",
+  "image": "characters/elf_portrait.webp",
+  "name": "Эльф-хранитель библиотеки",
+  "book": ""
+ },
+ {
+  "id": "shape_girl",
+  "image": "characters/shape_girl.webp",
+  "name": "Оборотень: девушка",
+  "book": ""
+ },
+ {
+  "id": "ghost_guitar",
+  "image": "characters/ghost_guitar.webp",
+  "name": "Призрак с гитарой",
+  "book": ""
+ },
+ {
+  "id": "ladybug_lady",
+  "image": "characters/ladybug_lady.webp",
+  "name": "Продавщица-божья коровка",
+  "book": ""
+ },
+ {
+  "id": "fluff_big",
+  "image": "characters/fluff_big.webp",
+  "name": "Мохнатик-великан",
+  "book": "Швейная сказка"
+ },
+ {
+  "id": "rider_1",
+  "image": "characters/rider_1.webp",
+  "name": "Призрачный всадник",
+  "book": "Ночь над крышами"
+ },
+ {
+  "id": "wagon_pumpkin",
+  "image": "characters/wagon_pumpkin.webp",
+  "name": "Тыквенный малыш",
+  "book": "Повозка с драконом"
+ },
+ {
+  "id": "cub_play",
+  "image": "characters/cub_play.webp",
+  "name": "Игривый лисёнок",
+  "book": "Фырка и цветок-солнце"
+ },
+ {
+  "id": "merman_cat",
+  "image": "characters/merman_cat.webp",
+  "name": "Кот-русал",
+  "book": ""
+ },
+ {
+  "id": "socks",
+  "image": "characters/socks.webp",
+  "name": "Носки на верёвке",
+  "book": ""
+ },
+ {
+  "id": "bunny_glasses",
+  "image": "characters/bunny_glasses.webp",
+  "name": "Зайка в очках",
+  "book": ""
+ },
+ {
+  "id": "cub_surprised",
+  "image": "characters/cub_surprised.webp",
+  "name": "Удивлённый лисёнок",
+  "book": "Фырка и цветок-солнце"
+ },
+ {
+  "id": "book_tower",
+  "image": "characters/book_tower.webp",
+  "name": "Башня из книг",
+  "book": ""
+ },
+ {
+  "id": "yokai_eye",
+  "image": "characters/yokai_eye.webp",
+  "name": "Одноглазая барышня",
+  "book": ""
+ },
+ {
+  "id": "dream_witch",
+  "image": "characters/dream_witch.webp",
+  "name": "Сонная ведьма",
+  "book": ""
+ },
+ {
+  "id": "raven_girl",
+  "image": "characters/raven_girl.webp",
+  "name": "Девочка в вороньей маске",
+  "book": ""
+ },
+ {
+  "id": "baby_hands",
+  "image": "characters/baby_hands.webp",
+  "name": "Малыш в колыбели",
+  "book": ""
+ },
+ {
+  "id": "cat_grey",
+  "image": "characters/cat_grey.webp",
+  "name": "Серый кот в колпачке",
+  "book": ""
+ },
+ {
+  "id": "pooh_tigger",
+  "image": "characters/pooh_tigger.webp",
+  "name": "Кругленький с мёдом",
+  "book": "Винни-Пух"
+ },
+ {
+  "id": "pooh_girl",
+  "image": "characters/pooh_girl.webp",
+  "name": "Девочка у края",
+  "book": "Винни-Пух"
+ },
+ {
+  "id": "heart_lock",
+  "image": "characters/heart_lock.webp",
+  "name": "Сердце с замочком",
+  "book": ""
+ },
+ {
+  "id": "pooh_tigger2",
+  "image": "characters/pooh_tigger2.webp",
+  "name": "Рыжий Тигра",
+  "book": "Винни-Пух"
+ },
+ {
+  "id": "fox_tail",
+  "image": "characters/fox_tail.webp",
+  "name": "Лисёнок на хвосте",
+  "book": "Лисья колыбельная"
+ },
+ {
+  "id": "gardener",
+  "image": "characters/gardener.webp",
+  "name": "Садовник",
+  "book": ""
+ },
+ {
+  "id": "star_bunny_left",
+  "image": "characters/star_bunny_left.webp",
+  "name": "Заяц с звёздочкой",
+  "book": ""
+ },
+ {
+  "id": "witch_blue",
+  "image": "characters/witch_blue.webp",
+  "name": "Синий гость с клыками",
+  "book": ""
+ },
+ {
+  "id": "frog_woman",
+  "image": "characters/frog_woman.webp",
+  "name": "Оборотень: лягушка",
+  "book": ""
+ },
+ {
+  "id": "ghost_dance",
+  "image": "characters/ghost_dance.webp",
+  "name": "Танцующие призраки",
+  "book": ""
+ },
+ {
+  "id": "insect_girl",
+  "image": "characters/insect_girl.webp",
+  "name": "Девочка с усиками",
+  "book": ""
+ },
+ {
+  "id": "fluff_mid",
+  "image": "characters/fluff_mid.webp",
+  "name": "Мохнатик на нитке",
+  "book": "Швейная сказка"
+ },
+ {
+  "id": "rider_2",
+  "image": "characters/rider_2.webp",
+  "name": "Всадник с флагом",
+  "book": "Ночь над крышами"
+ },
+ {
+  "id": "wagon_frank",
+  "image": "characters/wagon_frank.webp",
+  "name": "Очкарик-франкенштейн",
+  "book": "Повозка с драконом"
+ },
+ {
+  "id": "cub_main",
+  "image": "characters/cub_main.webp",
+  "name": "Фырка",
+  "book": "Фырка и цветок-солнце"
+ },
+ {
+  "id": "mermaid_baby",
+  "image": "characters/mermaid_baby.webp",
+  "name": "Крошка-русалка",
+  "book": ""
+ },
+ {
+  "id": "mole_optician",
+  "image": "characters/mole_optician.webp",
+  "name": "Крот-оптик",
+  "book": ""
+ },
+ {
+  "id": "crayfish",
+  "image": "characters/crayfish.webp",
+  "name": "Рак в пруду",
+  "book": "Фырка и цветок-солнце"
+ },
+ {
+  "id": "yokai_boy",
+  "image": "characters/yokai_boy.webp",
+  "name": "Круглоголовый малыш",
+  "book": ""
+ },
+ {
+  "id": "dream_cat",
+  "image": "characters/dream_cat.webp",
+  "name": "Сонный синий кот",
+  "book": ""
+ },
+ {
+  "id": "harpy_boy",
+  "image": "characters/harpy_boy.webp",
+  "name": "Мальчик-гарпия",
+  "book": ""
+ },
+ {
+  "id": "pooh_piglet",
+  "image": "characters/pooh_piglet.webp",
+  "name": "Розовый Пятачок",
+  "book": "Винни-Пух"
+ },
+ {
+  "id": "roo_heffalump",
+  "image": "characters/roo_heffalump.webp",
+  "name": "Малыш на плечах",
+  "book": "Винни-Пух"
+ },
+ {
+  "id": "fox_sleep",
+  "image": "characters/fox_sleep.webp",
+  "name": "Спящий лисёнок",
+  "book": "Лисья колыбельная"
+ },
+ {
+  "id": "anteater",
+  "image": "characters/anteater.webp",
+  "name": "Муравьед с лейкой",
+  "book": ""
+ },
+ {
+  "id": "star_bunny_laugh",
+  "image": "characters/star_bunny_laugh.webp",
+  "name": "Хохочущий заяц",
+  "book": ""
+ },
+ {
+  "id": "witch_vamp",
+  "image": "characters/witch_vamp.webp",
+  "name": "Гостья-вампирша",
+  "book": ""
+ },
+ {
+  "id": "frog_jump",
+  "image": "characters/frog_jump.webp",
+  "name": "Прыгучая лягушка",
+  "book": ""
+ },
+ {
+  "id": "ghost_pair",
+  "image": "characters/ghost_pair.webp",
+  "name": "Призраки на кладбище",
+  "book": ""
+ },
+ {
+  "id": "fluff_hanger",
+  "image": "characters/fluff_hanger.webp",
+  "name": "Мохнатик на вешалке",
+  "book": "Швейная сказка"
+ },
+ {
+  "id": "rider_3",
+  "image": "characters/rider_3.webp",
+  "name": "Всадница с лентами",
+  "book": "Ночь над крышами"
+ },
+ {
+  "id": "wagon_fox",
+  "image": "characters/wagon_fox.webp",
+  "name": "Лисёнок-вампир",
+  "book": "Повозка с драконом"
+ },
+ {
+  "id": "cub_flower",
+  "image": "characters/cub_flower.webp",
+  "name": "Пружинка",
+  "book": "Фырка и цветок-солнце"
+ },
+ {
+  "id": "owl_glasses",
+  "image": "characters/owl_glasses.webp",
+  "name": "Сова в очках",
+  "book": ""
+ },
+ {
+  "id": "yokai_kappa",
+  "image": "characters/yokai_kappa.webp",
+  "name": "Каппа-школьница",
+  "book": ""
+ },
+ {
+  "id": "dream_bird",
+  "image": "characters/dream_bird.webp",
+  "name": "Птица в шляпе",
+  "book": ""
+ },
+ {
+  "id": "hug_family",
+  "image": "characters/hug_family.webp",
+  "name": "Семейные объятия",
+  "book": ""
+ },
+ {
+  "id": "pooh_rabbit",
+  "image": "characters/pooh_rabbit.webp",
+  "name": "Кролик с морковкой",
+  "book": "Винни-Пух"
+ },
+ {
+  "id": "pooh_bear",
+  "image": "characters/pooh_bear.webp",
+  "name": "Винни",
+  "book": "Винни-Пух"
+ },
+ {
+  "id": "fox_flower",
+  "image": "characters/fox_flower.webp",
+  "name": "Малышка с цветочком",
+  "book": "Лисья колыбельная"
+ },
+ {
+  "id": "star_bunny_baby",
+  "image": "characters/star_bunny_baby.webp",
+  "name": "Малыш на ленте",
+  "book": ""
+ },
+ {
+  "id": "cake_13",
+  "image": "characters/cake_13.webp",
+  "name": "Праздничный торт",
+  "book": ""
+ },
+ {
+  "id": "wagon_witch",
+  "image": "characters/wagon_witch.webp",
+  "name": "Мальчик-ведьма",
+  "book": "Повозка с драконом"
+ },
+ {
+  "id": "blue_fish",
+  "image": "characters/blue_fish.webp",
+  "name": "Рыба-загадка",
+  "book": "Фырка и цветок-солнце"
+ },
+ {
+  "id": "yokai_cyclops",
+  "image": "characters/yokai_cyclops.webp",
+  "name": "Мальчик с глазом на стебельке",
+  "book": ""
+ },
+ {
+  "id": "goblin_lady",
+  "image": "characters/goblin_lady.webp",
+  "name": "Гоблинша-плакса",
+  "book": ""
+ },
+ {
+  "id": "wagon_owl",
+  "image": "characters/wagon_owl.webp",
+  "name": "Сова на крыше",
+  "book": "Повозка с драконом"
+ },
+ {
+  "id": "crow_scout",
+  "image": "characters/crow_scout.webp",
+  "name": "Ворон-разведчик",
+  "book": ""
+ },
+ {
+  "id": "dragon_wagon",
+  "image": "characters/dragon_wagon.webp",
+  "name": "Дракон-повозка",
+  "book": "Повозка с драконом"
+ },
+ {
+  "id": "crow_diver",
+  "image": "characters/crow_diver.webp",
+  "name": "Ворон на подлёте",
+  "book": ""
+ },
+ {
+  "id": "wagon_skull",
+  "image": "characters/wagon_skull.webp",
+  "name": "Череп-фонарик",
+  "book": "Повозка с драконом"
+ }
+]
